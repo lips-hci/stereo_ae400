@@ -6,11 +6,11 @@
   
   https://docs.nvidia.com/isaac/isaac/doc/setup.html#prerequisites
 
-3. Download latest NVIDIA Isaac SDK (latest release is Isaac 2019.2) from the following website:
+3. Download latest NVIDIA Isaac SDK from the following website:
 
   https://developer.nvidia.com/isaac/downloads
 
-  for example, you get latest release isaac-sdk-2019.2-30e21124.tar.xz, and save it to folder ~/Downloads
+  Currently, latest release is Isaac 2019.2 (file name isaac-sdk-2019.2-30e21124.tar.xz). Download and save it to the folder ~/Downloads
 
 4. git clone the LIPS stereo_ae400 workspace by the following commands:
 ```
@@ -30,7 +30,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
 
 ## To build support for AE400 camera on Isaac SDK:
 
-1. create a folder named issac under ~/Downloads and untar the Isaac SDK into it
+1. create a folder named 'issac' under ~/Downloads and untar the Isaac SDK into it
 ```
   $ mkdir -p ~/Downloads/isaac
   $ cd ~/Downloads
@@ -41,7 +41,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
   local_repository(
       name = "com_nvidia_isaac",
-      path = "/home/jsm/Downloads/isaac", # Here to sepcify Issac SDK location
+      path = "/home/jsm/Downloads/isaac", # Here to sepcify your Issac SDK location, e.g. ~/Downloads/issac
   )
 ```
 
@@ -68,25 +68,27 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
   note: If you have set IP address in the file network.json, it will be used first.
   
-        Otherwise, AE400 will use default IP address (192.168.0.100)
+  otherwise, AE400 will use default IP address (192.168.0.100)
 
-5. run the app locally.
+5. run the app on desktop.
 ```
   $ bazel run //app/ae400_camera
 ```
 
-  note: make sure the host, AE400, and remote robot are at the same network domain
+  note: make sure the host, AE400, and remote robot are at the same network domain, so they can connect to each other.
 
  - Open a web brower, connect to http://localhost:3000
  - From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
  
  ![screenshotOfIssacSight](screenshot_IssacSight_ae400_demo.jpg)
 
-#### (optional) Deploy and run the app remotely
+### Deploy and run the app remotely (optional)
 
 1. deploy the app to Jetson Nano(robot) remotely if you have one.
 
-  Command format (host side):
+  note: if you need Jetson TX2 support, please contact us.
+
+  Use below command on your host side.
 ```
   # deplay.sh --remote_user <username_on_robot>
                -p //app/ae400_camera:ae400_camera-pkg
@@ -96,8 +98,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
   For example:
 ```
-$ ./deploy.sh --remote_user lips -p //app/ae400_camera:ae400_camera-pkg \
-  -d jetpack42 -h 192.168.0.100 -u dt
+$ ./deploy.sh --remote_user lips -p //app/ae400_camera:ae400_camera-pkg -d jetpack42 -h 192.168.0.100 -u dt
 ```
 
 2. run the app remotely on the robot.
@@ -116,9 +117,7 @@ host side:
   $ ssh ROBOTUSER@ROBOTIP
   $ cd ~/deploy/<install_home_name_you_want>/ae400_camera-pkg
   $ ./app/ae400_camera/ae400_camera
-  $ exit
 ```
-
  - Open a web brower, connect to http://<robot_ip>:3000
  - From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
 
