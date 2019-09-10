@@ -1,0 +1,165 @@
+{
+  "name": "ae400_camera",
+  "modules": [
+    "ae400",
+    "@com_nvidia_isaac//packages/rgbd_processing",
+    "@com_nvidia_isaac//packages/viewers"
+  ],
+  "config": {
+    "camera": {
+      "realsense": {
+        "rows": 360,
+        "cols": 640,
+        "rgb_framerate": 15,
+        "depth_framerate": 15,
+        "align_to_color": true,
+        "frame_queue_size": 2,
+        "auto_exposure_priority": false
+      }
+    },
+    "viewer": {
+      "color": {
+        "reduce_scale": 2
+      },
+      "depth": {
+        "reduce_scale": 2,
+        "min_visualization_depth": 0.2,
+        "max_visualization_depth": 5.0,
+        "camera_name": "AE400",
+        "colormap": [
+          [128,   0,   0],
+          [255,   0,   0],
+          [255, 255,   0],
+          [0,   255, 255],
+          [0,     0, 255],
+          [0,     0, 128]
+        ]
+      }
+    },
+    "point_cloud": {
+      "depth_to_pointcloud": {
+        "use_color": true
+      }
+    },
+    "websight": {
+      "WebsightServer": {
+        "webroot": "external/com_nvidia_isaac/packages/sight/webroot",
+        "port": 3000,
+        "ui_config": {
+          "windows": {
+            "Ae400 - Color": {
+              "renderer": "2d",
+              "dims": {
+                "width": 640,
+                "height": 360
+              },
+              "channels": [
+                {
+                  "name": "ae400_camera/viewer/color/Color"
+                }
+              ]
+            },
+            "Ae400 - Depth": {
+              "renderer": "2d",
+              "dims": {
+                "width": 640,
+                "height": 360
+              },
+              "channels": [
+                {
+                  "name": "ae400_camera/viewer/depth/Depth"
+                }
+              ]
+            },
+            "Ae400 - Points": {
+              "renderer": "3d",
+              "dims": {
+                "width": 640,
+                "height": 480
+              },
+              "channels": [
+                {
+                  "name": "ae400_camera/point_cloud/viewer/points"
+                }
+              ]
+            }
+          },
+          "assets": {}
+        }
+      }
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "name": "camera",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "realsense",
+            "type": "isaac::RealsenseCamera"
+          }
+        ]
+      },
+      {
+        "name": "viewer",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "depth",
+            "type": "isaac::viewers::DepthCameraViewer"
+          },
+          {
+            "name": "color",
+            "type": "isaac::viewers::ColorCameraViewer"
+          }
+        ]
+      },
+      {
+        "name": "point_cloud",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "depth_to_pointcloud",
+            "type": "isaac::rgbd_processing::DepthImageToPointCloud"
+          },
+          {
+            "name": "viewer",
+            "type": "isaac::viewers::PointCloudViewer"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "camera/realsense/depth",
+        "target": "viewer/depth/depth_listener"
+      },
+      {
+        "source": "camera/realsense/color",
+        "target": "viewer/color/color_listener"
+      },
+      {
+        "source": "camera/realsense/depth",
+        "target": "point_cloud/depth_to_pointcloud/depth"
+      },
+      {
+        "source": "camera/realsense/color",
+        "target": "point_cloud/depth_to_pointcloud/color"
+      },
+      {
+        "source": "point_cloud/depth_to_pointcloud/cloud",
+        "target": "point_cloud/viewer/cloud"
+      }
+    ]
+  }
+}

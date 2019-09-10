@@ -26,20 +26,23 @@ OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-workspace(name = "velodyne_lidar")
+workspace(name = "ae400_sample")
 
 # Point following dependency to Isaac SDK night Release 0528 downloaded from https://developer.nvidia.com/isaac/downloads
 local_repository(
     name = "com_nvidia_isaac",
-    path = "ISAAC_SDK_NIGHTLY_RELEASE_0528",
+    path = "/home/jsm/Downloads/isaac",
 )
 
 load("@com_nvidia_isaac//third_party:engine.bzl", "isaac_engine_workspace")
 load("@com_nvidia_isaac//third_party:packages.bzl", "isaac_packages_workspace")
+load("@com_nvidia_isaac//third_party:zed.bzl", "isaac_zed_workspace")
 
 isaac_engine_workspace()
 
 isaac_packages_workspace()
+
+isaac_zed_workspace()
 
 # Configures toolchain
 load("@com_nvidia_isaac//engine/build/toolchain:toolchain.bzl", "toolchain_configure")
@@ -48,8 +51,8 @@ toolchain_configure(name = "toolchain")
 
 ####################################################################################################
 
-# Velodyne Lidar specific dependencies
+# my ae400 specific dependencies
 
-load(":repositories.bzl", "velodyne_lidar_workspace")
+load("//third_party:mypackages.bzl", "ae400_workspace")
 
-velodyne_lidar_workspace()
+ae400_workspace()

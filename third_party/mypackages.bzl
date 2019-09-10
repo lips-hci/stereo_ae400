@@ -26,14 +26,26 @@ OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_app", "isaac_cc_module")
+load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_http_archive", "isaac_new_http_archive", "isaac_new_local_repository")
 
-isaac_app(
-    name = "vlp16_sample",
-    app_json_file = "vlp_sample.app.json",
-    modules = [
-        "velodyne_lidar",
-        "@com_nvidia_isaac//packages/perception",
-        "@com_nvidia_isaac//packages/viewers",
-    ],
-)
+def clean_dep(dep):
+    return str(Label(dep))
+
+def ae400_workspace():
+    isaac_http_archive(
+        name = "com_google_absl",
+        sha256 = "c8ba586a9ab12bc4a67bb419fc0d2146200942b072bac95f50490f977b7fb04f",
+        strip_prefix = "abseil-cpp-5441bbe1db5d0f2ca24b5b60166367b0966790af",
+        urls = ["https://github.com/abseil/abseil-cpp/archive/5441bbe1db5d0f2ca24b5b60166367b0966790af.tar.gz"],
+        licenses = ["@com_google_absl//:COPYRIGHT"],
+    )
+
+    isaac_new_http_archive(
+        name = "ae400cs",
+	build_file = clean_dep("//third_party:ae400.BUILD"),
+        sha256 = "c1a68fea026c25f16b2683531a3d5fd1abeffb72e5a49cbb34f82c3e5f0872b2",
+        url = "https://www.lips-hci.com/download/ae400.tar.gz",
+        type = "tar.gz",
+        strip_prefix = "ae400",
+        licenses = ["@ae400cs//:LICENSE"],
+    )
