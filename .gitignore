@@ -6,4 +6,5 @@ cscope.*
 *.pyc
 .vscode/*
 imgui.ini
-
+*~
+*.un~
