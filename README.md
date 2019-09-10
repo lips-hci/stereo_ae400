@@ -10,7 +10,7 @@
 
   https://developer.nvidia.com/isaac/downloads
 
-  get latest release, e.g. isaac-sdk-2019.2-30e21124.tar.xz, and save it to folder ~/Downloads
+  for example, you get latest release isaac-sdk-2019.2-30e21124.tar.xz, and save it to folder ~/Downloads
 
 4. git clone the LIPS stereo_ae400 workspace by the following commands:
 ```
@@ -28,7 +28,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
    
    https://gist.github.com/bogdan-kulynych/f64eb148eeef9696c70d485a76e42c3a
 
-## To build support for ae400 on Isaac SDK:
+## To build support for AE400 camera on Isaac SDK:
 
 1. create a folder named issac under ~/Downloads and untar the Isaac SDK into it
 ```
@@ -77,7 +77,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
 
   note: make sure the host, AE400, and remote robot are at the same network domain
 
- - Open a web brower, connect to http://local_ip:3000
+ - Open a web brower, connect to http://localhost:3000
  - Enable Channel (select the checkbox) to see camera streaming
 
 #### (optional) Deploy and run the app remotely
@@ -95,7 +95,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
   For example:
 ```
 $ ./deploy.sh --remote_user lips -p //app/ae400_camera:ae400_camera-pkg \
-  -d jetpack42 -h 172.24.33.27 -u dt
+  -d jetpack42 -h 192.168.0.100 -u dt
 ```
 
 2. run the app remotely on the robot.
