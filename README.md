@@ -78,7 +78,9 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
   note: make sure the host, AE400, and remote robot are at the same network domain
 
  - Open a web brower, connect to http://localhost:3000
- - Enable Channel (select the checkbox) to see camera streaming
+ - From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
+ 
+ ![screenshotOfIssacSight](screenshot_IssacSight_ae400_demo.jpg)
 
 #### (optional) Deploy and run the app remotely
 
@@ -118,6 +120,6 @@ host side:
 ```
 
  - Open a web brower, connect to http://<robot_ip>:3000
- - Enable Channel (select the checkbox) to see camera streaming
+ - From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
 
 8. Enjoy!
