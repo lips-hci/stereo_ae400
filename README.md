@@ -111,10 +111,18 @@ host side:
     $ ssh-copy-id <username_on_robot>@<robot_ip>
     ```
    note: if you did commands above, you won't input password when you connect to robot by ssh
-
+ 
+ - copy network.json to remote robot
+ ```
+  $ scp config/network.json <username_on_robot>@<robot_ip>:~     //enter password to transfer it to robot
+ ```
  - Run the app
  ```
   $ ssh ROBOTUSER@ROBOTIP
+  $ sudo mkdir -p /usr/etc/LIPS/lib
+  $ sudo cp ~/network.json /usr/etc/LIPS/lib/
+  $ vi /usr/etc/LIPS/lib/network.json  //assign the IP address you want
+  
   $ cd ~/deploy/<install_home_name_you_want>/ae400_camera-pkg
   $ ./app/ae400_camera/ae400_camera
 ```
