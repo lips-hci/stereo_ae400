@@ -122,9 +122,11 @@ void RealsenseCamera::start() {
 void RealsenseCamera::tick() {
   try {
     // check device settings, and update as needed
-    for (const rs2::device& dev : impl_->devices) {
-      updateDeviceConfig(dev);
-    }
+    // comment 3-line below to improve performance, but
+    // we can not adjust auto exposure dynamically
+    //for (const rs2::device& dev : impl_->devices) {
+    //  updateDeviceConfig(dev);
+    //}
 
     // wait for new frames
     rs2::frameset frames = impl_->pipe.wait_for_frames();
