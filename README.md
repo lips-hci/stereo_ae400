@@ -1,16 +1,25 @@
-## PREREQUISITE:
+# LIPSedge™ AE400 Industrial 3D Camera
+![ae400 product banner](https://www.lips-hci.com/image/data/AE400/AE400_WEB-BANNER.png)
+**LIPSedge™ AE400** is an industrial GigE 3D camera with IP67 protection and powered by Intel® RealSense™ technology and designed for industrial applications, such as robot application, logistic/factory automation, and 3D monitoring/inspection.
+
+ - [Product Overview](https://www.lips-hci.com/product?product_id=29)
+ - [Product Documents](https://filebox.lips-hci.com/index.php/s/ZNO5JggmYeddYcA)
+ - [Product Support](https://www.lips-hci.com/downloads/category)
+ - See details on https://www.youtube.com/watch?v=kyjbJSM6CjQ
+
+## PREREQUISITE
 
 1. Prepare a Ubuntu 18.04 x64 desktop equipped with a NVIDIA video card that supports CUDA.
 
 2. Install dependencies of desktop/Bazel/NVIDIA GPU Driver according to the following document:
   
-  https://docs.nvidia.com/isaac/isaac/doc/setup.html#prerequisites
+ - https://docs.nvidia.com/isaac/isaac/doc/setup.html#prerequisites
 
 3. Download latest NVIDIA Isaac SDK from the following website:
 
-  https://developer.nvidia.com/isaac/downloads
+ - https://developer.nvidia.com/isaac/downloads
 
-  Currently, latest release is Isaac 2019.2 (file name isaac-sdk-2019.2-30e21124.tar.xz). Download and save it to the folder ~/Downloads
+Currently, latest Isaac release is 2019.2 (file name isaac-sdk-2019.2-30e21124.tar.xz). Download and save it to the folder ~/Download, or any directory you preferred.
 
 4. git clone the LIPS stereo_ae400 workspace by the following commands:
 ```
@@ -18,7 +27,7 @@ $ cd ~/Download
 $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
 
-#### Read More:
+#### Learn more
 
 1. How to switch between Intel and NVIDIA video cards on Ubuntu?
    
@@ -28,7 +37,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
    
    https://gist.github.com/bogdan-kulynych/f64eb148eeef9696c70d485a76e42c3a
 
-## To build support for AE400 camera on Isaac SDK:
+## Build software app for AE400 camera on Isaac SDK
 
 1. create a folder named 'issac' under ~/Downloads and untar the Isaac SDK into it
 ```
