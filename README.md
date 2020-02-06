@@ -2,10 +2,10 @@
 ![ae400 product banner](https://github.com/lips-hci/ae400-realsense-sdk/blob/master/AE400_WEB-BANNER.png)
 **LIPSedge™ AE400** is an industrial GigE 3D camera with IP67 protection and powered by Intel® RealSense™ technology and designed for industrial applications, such as robot application, logistic/factory automation, and 3D monitoring/inspection.
 
- - [Product Overview](https://www.lips-hci.com/product?product_id=29)
- - [Product Documents](https://filebox.lips-hci.com/index.php/s/ZNO5JggmYeddYcA)
- - [Product Support](https://www.lips-hci.com/downloads/category)
- - See details on https://www.youtube.com/watch?v=kyjbJSM6CjQ
+ - [Product Overview](https://www.lips-hci.com/product-page/lipsedge-ae400-industrial-3d-camer)
+ - [Product Datasheet](https://filebox.lips-hci.com/index.php/s/EbObZonlvOhO1rK)
+ - [Developer Support](https://github.com/lips-hci)
+ - :clapper: Check out our latest product [video](https://video.wixstatic.com/video/f36a01_f8dd552424db49a1a41b89764cf142d9/480p/mp4/file.mp4)
 
 ## PREREQUISITE
 
@@ -19,13 +19,17 @@
 
  - https://developer.nvidia.com/isaac/downloads
 
-Currently, latest Isaac release is 2019.2 (file name isaac-sdk-2019.2-30e21124.tar.xz). Download and save it to the folder ~/Download, or any directory you preferred.
+At this time, we are using the release [Isaac SDK 2019.2](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz) and jetpack42 for the embedded-side. Download SDK and save it to the folder ~/Download, or any directory you preferred.
 
-4. git clone the LIPS stereo_ae400 workspace by the following commands:
+:construction: [Isaac SDK 2019.3](https://developer.nvidia.com/isaac-sdk-20193) is released (with jetpack43) but we got some package missing build problems (no such package '@boost//') and are under working to fix it.
+
+4. git clone the LIPS stereo_ae400 workspace by below commands:
 ```
 $ cd ~/Download
 $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
+:bulb: This workspace runs AE400 SDK **0.9.0.5** at host-side, and device firmware version 1.1.
+We will upgrade it soon! Please find latest developer resource from our open-source community https://github.com/lips-hci or [contact us](info@lips-hci.com).
 
 #### Learn more
 
