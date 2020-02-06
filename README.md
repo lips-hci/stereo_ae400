@@ -5,7 +5,7 @@
  - [Product Overview](https://www.lips-hci.com/product-page/lipsedge-ae400-industrial-3d-camer)
  - [Product Datasheet](https://filebox.lips-hci.com/index.php/s/EbObZonlvOhO1rK)
  - [Developer Support](https://github.com/lips-hci)
- - :clapper: Check out our latest product [video](https://video.wixstatic.com/video/f36a01_f8dd552424db49a1a41b89764cf142d9/480p/mp4/file.mp4)
+ - :clapper: Watch our latest video on https://www.youtube.com/watch?v=kyjbJSM6CjQ
 
 ## PREREQUISITE
 
