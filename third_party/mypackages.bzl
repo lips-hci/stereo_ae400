@@ -44,7 +44,7 @@ def ae400_workspace():
         name = "ae400cs",
 	build_file = clean_dep("//third_party:ae400.BUILD"),
         sha256 = "c1a68fea026c25f16b2683531a3d5fd1abeffb72e5a49cbb34f82c3e5f0872b2",
-        url = "https://www.lips-hci.com/download/ae400.tar.gz",
+        url = "https://filebox.lips-hci.com/index.php/s/lobugJWAfDV4bTN/download",
         type = "tar.gz",
         strip_prefix = "ae400",
         licenses = ["@ae400cs//:LICENSE"],
