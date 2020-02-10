@@ -31,7 +31,7 @@ $ cd ~/Download
 $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
 :bulb: This workspace runs AE400 SDK **0.9.0.5** at host-side, and device firmware version **1.1**.
-We will upgrade it soon! Please find latest developer resource from our open-source community https://github.com/lips-hci or [contact us](info@lips-hci.com) for support.
+We will upgrade it soon! Please find latest developer resource from our open-source community https://github.com/lips-hci or [contact us](https://www.lips-hci.com/contact) for support.
 
 #### Learn more
 
