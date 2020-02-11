@@ -67,30 +67,41 @@ We will upgrade it soon! Please find latest developer resource from our open-sou
 ```
   note: make sure your host can access to Internet, or you will get build errors
 
-4. (optional) tell server the IP address of the AE400 camera, default setting is 192.168.0.100
+4. IP address configuration
 
- - You can assign new IP address through browser,
+  * (Optional) Camera side:
+
+  You can assign new IP address to AE400 camera via browser, the default setting is _192.168.0.100_
+
+  Input URL http://192.168.0.100 to open the camera configuration page, log in it, write new IP address and save setting
   
-  open a web browser and input http://192.168.0.100/
+  note: Check your product manual to know login account/password, or contact [LIPS](https://www.lips-hci.com/contact) to get support
 
-  you will see the online configuration page. Log in and change the IP address you want.
+  * Host side (Desktop):
 
- - or you can edit the configuration file on your host,
+  Edit the network setting file to configure the connecting IP address
+```
+  $ vi config/network.json
+
+  {
+    "config": {
+      "ip": "192.168.0.100"  <= The AE400 camera's IP address for connecting
+    }
+  }
+```
+  Then install the setting to your system
 ```
   $ sudo mkdir -p /usr/etc/LIPS/lib
-  $ sudo cp /config/network.json /usr/etc/LIPS/lib/
-  $ vi /usr/etc/LIPS/lib/network.json  //assign the IP address you want
+  $ sudo cp config/network.json /usr/etc/LIPS/lib/
 ```
-  note: If you have set IP address in the file network.json, it will be used first.
-  
-  otherwise, AE400 will use default IP address (192.168.0.100)
+  note: AE400 software looks for setting in /usr/etc/LIPS/lib/network.json. If file is missing, default IP address _192.168.0.100_ is applied.
 
-5. run the app on desktop.
+5. run camera app by command-line.
 ```
   $ bazel run //app/ae400_camera
 ```
 
-  note: make sure the host, AE400, and remote robot are at the same network domain, so they can connect to each other.
+  note: make sure the host, AE400 camera, and the remote robot are at same network domain, so they can connect to each other.
 
  - Open a web brower, connect to http://localhost:3000
  - From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
