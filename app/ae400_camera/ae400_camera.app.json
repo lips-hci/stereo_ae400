@@ -19,13 +19,14 @@
     },
     "viewer": {
       "color": {
-        "reduce_scale": 2
+        "reduce_scale": 2,
+        "camera_name": "AE400 Color"
       },
       "depth": {
         "reduce_scale": 2,
         "min_visualization_depth": 0.2,
         "max_visualization_depth": 5.0,
-        "camera_name": "AE400",
+        "camera_name": "AE400 Depth",
         "colormap": [
           [128,   0,   0],
           [255,   0,   0],
@@ -47,7 +48,7 @@
         "port": 3000,
         "ui_config": {
           "windows": {
-            "Ae400 - Color": {
+            "AE400 - Color": {
               "renderer": "2d",
               "dims": {
                 "width": 640,
@@ -59,7 +60,7 @@
                 }
               ]
             },
-            "Ae400 - Depth": {
+            "AE400 - Depth": {
               "renderer": "2d",
               "dims": {
                 "width": 640,
@@ -71,7 +72,7 @@
                 }
               ]
             },
-            "Ae400 - Points": {
+            "AE400 - Points": {
               "renderer": "3d",
               "dims": {
                 "width": 640,

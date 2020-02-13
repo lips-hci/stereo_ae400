@@ -21,7 +21,7 @@ cc_import(
     name = "libis4",
     shared_library = select({
         "@com_nvidia_isaac//engine/build:platform_x86_64": "lib/x64/libis4.so",
-        "@com_nvidia_isaac//engine/build:platform_jetpack42": "lib/aarch64/libis4.so",
+        "@com_nvidia_isaac//engine/build:platform_jetpack43": "lib/aarch64/libis4.so",
     })
 )
 

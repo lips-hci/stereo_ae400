@@ -13,7 +13,7 @@ load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_cc_module", "isaac_comp
 isaac_component(
     name = "ae400_camera_comp",
     deps = [
-        "@com_nvidia_isaac//engine/gems/geometry",
+        "@com_nvidia_isaac//engine/gems/geometry:pinhole",
         "@ae400cs",
     ],
 )

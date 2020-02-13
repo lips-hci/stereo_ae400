@@ -139,16 +139,16 @@ void RealsenseCamera::tick() {
 
     // color image
     rs2::video_frame color_frame = frames.get_color_frame();
-    CpuAlignedBufferConstView color_buffer(reinterpret_cast<const byte*>(color_frame.get_data()),
-                                           color_frame.get_height(),
-                                           color_frame.get_stride_in_bytes());
+    CpuBufferConstView color_buffer(reinterpret_cast<const byte*>(color_frame.get_data()),
+                                    color_frame.get_height() * color_frame.get_stride_in_bytes());
     ImageConstView3ub color_image_view(color_buffer, color_frame.get_height(),
                                        color_frame.get_width());
     Image3ub color_image(color_image_view.dimensions());
     Copy(color_image_view, color_image);
     auto color_intrinsics =
         color_frame.get_profile().as<rs2::video_stream_profile>().get_intrinsics();
-    geometry::Pinhole<double> color_pinhole{color_frame.get_height(), color_frame.get_width(),
+    const geometry::PinholeD color_pinhole{
+        Vector2i{color_frame.get_height(), color_frame.get_width()},
                                             Vector2d{color_intrinsics.fy, color_intrinsics.fx},
                                             Vector2d{color_intrinsics.ppy, color_intrinsics.ppx}};
     auto proto_color = tx_color().initProto();
@@ -158,16 +158,16 @@ void RealsenseCamera::tick() {
 
     // depth image
     rs2::depth_frame depth_frame = frames.get_depth_frame();
-    CpuAlignedBufferConstView depth_buffer(reinterpret_cast<const byte*>(depth_frame.get_data()),
-                                           depth_frame.get_height(),
-                                           depth_frame.get_stride_in_bytes());
+    CpuBufferConstView depth_buffer(reinterpret_cast<const byte*>(depth_frame.get_data()),
+                                    depth_frame.get_height() * depth_frame.get_stride_in_bytes());
     ImageConstView1ui16 depth_image_view(depth_buffer, depth_frame.get_height(),
                                          depth_frame.get_width());
     Image1f depth_image(depth_frame.get_height(), depth_frame.get_width());
     ConvertUi16ToF32(depth_image_view, depth_image, 0.001);
     auto depth_intrinsics =
         depth_frame.get_profile().as<rs2::video_stream_profile>().get_intrinsics();
-    geometry::Pinhole<double> depth_pinhole{depth_frame.get_height(), depth_frame.get_width(),
+    const geometry::PinholeD depth_pinhole{
+        Vector2i{depth_frame.get_height(), depth_frame.get_width()},
                                             Vector2d{depth_intrinsics.fy, depth_intrinsics.fx},
                                             Vector2d{depth_intrinsics.ppy, depth_intrinsics.ppx}};
     auto proto_depth = tx_depth().initProto();

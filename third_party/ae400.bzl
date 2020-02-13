@@ -26,11 +26,13 @@ OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_http_archive", "isaac_new_http_archive", "isaac_new_local_repository")
+load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_new_http_archive", "isaac_http_archive")
+load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_new_local_repository")
 
 def clean_dep(dep):
     return str(Label(dep))
 
+# load lib dependencies for realsense and nvidia isaac
 def ae400_workspace():
     isaac_http_archive(
         name = "com_google_absl",
