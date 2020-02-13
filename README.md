@@ -21,17 +21,22 @@
 
  - https://developer.nvidia.com/isaac/downloads
 
-:bulb: At this time, we use release [Isaac SDK 2019.2](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz) and jetpack42 for the embedded-side. Download SDK and save it to the folder ~/Download, or any directory you preferred.
-
-:construction: [Isaac SDK 2019.3](https://developer.nvidia.com/isaac-sdk-20193) is released (with jetpack43) but we got some package missing build errors (no such package '@boost//' ...) and are under working to fix it.
-
 4. git clone the LIPS stereo_ae400 workspace by below commands:
 ```
 $ cd ~/Download
 $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
-:bulb: This workspace runs AE400 SDK **0.9.0.5** at host-side, and device firmware version **1.1**.
-We will upgrade it soon! Please find latest developer resource from our open-source community https://github.com/lips-hci or [contact us](https://www.lips-hci.com/contact) for support.
+:bulb: This workspace now runs AE400 SDK **0.9.0.5** at host-side, and device firmware version **1.1**.
+We will upgrade it soon! Please visit LIPS open-source community https://github.com/lips-hci to find more developer resources or [contact us](https://www.lips-hci.com/contact) for support.
+
+#### Download Isaac SDK
+
+Save Isaac SDK to the folder ~/Download, or any directory you preferred.
+
+:bulb: The branch '_master_' now supports the latest Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193) and it requires jetpack43 for embedded side.
+
+ - For users who want to stay at Isaac release 2019.2, please switch your working branch to '_isaac-2019.2_'.
+ You can get sdk from NVIDIA download archive [isaac-sdk-2019-2-30e21124-tar-xz](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz)
 
 #### Learn more
 
