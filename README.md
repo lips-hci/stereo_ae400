@@ -14,150 +14,166 @@
 1. Prepare a Ubuntu 18.04 x64 desktop equipped with a NVIDIA video card that supports CUDA.
 
 2. Install dependencies of desktop/Bazel/NVIDIA GPU Driver according to the following document:
-  
+
  - https://docs.nvidia.com/isaac/isaac/doc/setup.html#prerequisites
 
-3. Download the NVIDIA Isaac SDK from the following website:
+3. Download NVIDIA Isaac SDK from website:
 
  - https://developer.nvidia.com/isaac/downloads
+
+
+
+Save Isaac SDK to the folder ~/Download, or any directory you preferred.
+
+:bulb: The branch '_master_' now supports the latest Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193) and it requires jetpack43 for embedded side.
+
+
+For users who want to stay at Isaac release 2019.2, please switch your working branch to '_isaac-2019.2_'.
+ - You can get it [isaac-sdk-2019-2-30e21124-tar-xz](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz) from NVIDIA download archive
+
 
 4. git clone the LIPS stereo_ae400 workspace by below commands:
 ```
 $ cd ~/Download
 $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
-:bulb: This workspace now runs AE400 SDK **0.9.0.5** at host-side, and device firmware version **1.1**.
-We will upgrade it soon! Please visit LIPS open-source community https://github.com/lips-hci to find more developer resources or [contact us](https://www.lips-hci.com/contact) for support.
 
-#### Download Isaac SDK
-
-Save Isaac SDK to the folder ~/Download, or any directory you preferred.
-
-:bulb: The branch '_master_' now supports the latest Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193) and it requires jetpack43 for embedded side.
-
- - For users who want to stay at Isaac release 2019.2, please switch your working branch to '_isaac-2019.2_'.
- You can get sdk from NVIDIA download archive [isaac-sdk-2019-2-30e21124-tar-xz](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz)
+   :bulb: This workspace now runs AE400 SDK **0.9.0.5** at host-side, and device firmware version **1.1**.
+   We will upgrade it soon! Please visit LIPS open-source community https://github.com/lips-hci to find more developer resources or [contact us](https://www.lips-hci.com/contact) for support.
 
 #### Learn more
 
 1. How to switch between Intel and NVIDIA video cards on Ubuntu?
-   
-   https://www.linuxbabe.com/desktop-linux/switch-intel-nvidia-graphics-card-ubuntu
-      
+
+ - https://www.linuxbabe.com/desktop-linux/switch-intel-nvidia-graphics-card-ubuntu
+
 2. If you want to install CUDA 10.0 manually, you can refer this one-click-install script.
-   
-   https://gist.github.com/bogdan-kulynych/f64eb148eeef9696c70d485a76e42c3a
+
+ - https://gist.github.com/bogdan-kulynych/f64eb148eeef9696c70d485a76e42c3a
 
 ## Build software app for AE400 camera on Isaac SDK
 
 1. create a folder named 'issac' under ~/Downloads and untar the Isaac SDK into it
 ```
-  $ mkdir -p ~/Downloads/isaac
-  $ cd ~/Downloads
-  $ tar Jxvpf isaac-sdk-2019.2-30e21124.tar.xz -C isaac
+ $ mkdir -p ~/Downloads/isaac
+ $ cd ~/Downloads
+ $ tar Jxvpf isaac-sdk-2019.2-30e21124.tar.xz -C isaac
 ```
 
 2. modify the path in the WORKSPACE under the stereo_ae400 folder.
 ```
-  local_repository(
-      name = "com_nvidia_isaac",
-      path = "/home/jsm/Downloads/isaac", # Here to sepcify your Issac SDK location, e.g. ~/Downloads/issac
-  )
+ local_repository(
+     name = "com_nvidia_isaac",
+     path = "/home/jsm/Downloads/isaac", # Here to sepcify your Issac SDK location, e.g. ~/Downloads/issac
+ )
 ```
 
 3. build the app under stereo_ae400 folder.
 ```
-  $ cd ~/Downloads/stereo_ae400
-  $ bazel build //app/ae400_camera
+ $ cd ~/Downloads/stereo_ae400
+ $ bazel build //app/ae400_camera
 ```
-  note: make sure your host can access to Internet, or you will get build errors
+ note: make sure your host can access to Internet, or you will get build errors
 
 4. IP address configuration
 
-  * (Optional) Camera side:
+#### Camera side:
 
-  You can assign new IP address to AE400 camera via browser, the default setting is _192.168.0.100_
+ The default setting of AE400 camear is _192.168.0.100_, however, you can assign new IP address to it via browser.
 
-  Input URL http://192.168.0.100 to open the camera configuration page, log in it, write new IP address and save setting
-  
-  note: Check your product manual to know login account/password, or contact [LIPS](https://www.lips-hci.com/contact) to get support
+ Input URL http://192.168.0.100 to open AE400 configuration page, log in, write new IP address and save setting
 
-  * Host side (Desktop):
+ <img src="screenshot_ae400_online_configuration.png" width="400">
 
-  Edit the network setting file to configure the connecting IP address
+ note: Check your product manual to find login account and password, or contact [LIPS](https://www.lips-hci.com/contact) to get support
+
+#### Host side:
+
+ Configure the IP address for connecting AE400 by editing the network setting file
 ```
-  $ vi config/network.json
+ $ vi config/network.json
 
-  {
-    "config": {
-      "ip": "192.168.0.100"  <= The AE400 camera's IP address for connecting
-    }
-  }
+ {
+   "config": {
+     "ip": "192.168.0.100"  <= it should match AE400 camera's IP address
+   }
+ }
 ```
-  Then install the setting to your system
+
+ Then install the setting to your system
 ```
-  $ sudo mkdir -p /usr/etc/LIPS/lib
-  $ sudo cp config/network.json /usr/etc/LIPS/lib/
+ $ sudo mkdir -p /usr/etc/LIPS/lib
+ $ sudo cp config/network.json /usr/etc/LIPS/lib/
 ```
-  note: AE400 software looks for setting in /usr/etc/LIPS/lib/network.json. If file is missing, default IP address _192.168.0.100_ is applied.
+
+ note: AE400 software looks for setting in system path ``/usr/etc/LIPS/lib/network.json``. If file is missing, default IP address _192.168.0.100_ is applied.
 
 5. run camera app by command-line.
 ```
-  $ bazel run //app/ae400_camera
+ $ bazel run //app/ae400_camera
 ```
 
-  note: make sure the host, AE400 camera, and the remote robot are at same network domain, so they can connect to each other.
+ note: make sure the host, AE400 camera, and the remote robot are at same network domain, so they can connect to each other.
 
- - Open a web brower, connect to http://localhost:3000
- - From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
- 
- ![screenshotOfIssacSight](screenshot_IssacSight_ae400_demo.jpg)
+6. Open a web brower, connect to http://localhost:3000
 
-### Deploy and run the app remotely (optional)
+ From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
 
-1. deploy the app to Jetson Nano(robot) remotely if you have one.
+ Isaac Sight webpage
+ ![screenshot of Issac Sight](screenshot_IssacSight_ae400_demo.jpg)
 
-  note: if you need Jetson TX2 support, please contact us.
+7. Enjoy!
 
-  Use below command on your host side.
+## Deploy the app to remote robot (optional)
+You can run the app on remote robot like Jetson Nano or TX2
+
+#### Deploy the app to remote robot
+ - Use below command on your host side.
 ```
-  # deplay.sh --remote_user <username_on_robot>
-               -p //app/ae400_camera:ae400_camera-pkg
-               -d jetpack42
-               -h <robot_ip>
-               -u <insatll_home_name_you_want>
-```
-  For example:
-```
-$ ./deploy.sh --remote_user lips -p //app/ae400_camera:ae400_camera-pkg -d jetpack42 -h 192.168.0.100 -u dt
+ # deploy.sh --remote_user <username_on_robot>
+              -p //app/ae400_camera:ae400_camera-pkg
+              -d <jetpack42 | jetpack43>
+              -h <robot_ip>
+              -u <insatll_home_name_you_want>
 ```
 
-2. run the app remotely on the robot.
-
-host side:
-
- - Make sure you have an SSH key on your desktop machine.
-   ```
-    $ ssh-keygen
-    $ ssh-copy-id <username_on_robot>@<robot_ip>
-    ```
-   note: if you did commands above, you won't input password when you connect to robot by ssh
- 
- - copy network.json to remote robot
- ```
-  $ scp config/network.json <username_on_robot>@<robot_ip>:~     //enter password to transfer it to robot
- ```
- - Run the app
- ```
-  $ ssh ROBOTUSER@ROBOTIP
-  $ sudo mkdir -p /usr/etc/LIPS/lib
-  $ sudo cp ~/network.json /usr/etc/LIPS/lib/
-  $ vi /usr/etc/LIPS/lib/network.json  //assign the IP address you want
-  
-  $ cd ~/deploy/<install_home_name_you_want>/ae400_camera-pkg
-  $ ./app/ae400_camera/ae400_camera
+ - For example:
 ```
- - Open a web brower, connect to http://<robot_ip>:3000
- - From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
+ $ ./deploy.sh --remote_user lips -p //app/ae400_camera:ae400_camera-pkg -d jetpack42 -h 192.168.0.100 -u dt
+```
 
-8. Enjoy!
+#### Run the app remotely on robot
+
+ - Use below commands on your host side:
+
+ 1. make sure you have an SSH key on your desktop machine.
+```
+ $ ssh-keygen
+ $ ssh-copy-id <username_on_robot>@<robot_ip>
+```
+ note: use command ssh-copy-id to save your time typing password when loging in to robot by ssh.
+
+ 2. copy network.json to remote robot
+```
+ $ scp config/network.json <username_on_robot>@<robot_ip>:~/
+```
+
+ 3. ssh log in to remote robot
+
+ - install network setting
+```
+ $ ssh <username_on_robot>@<robot_ip>
+ $ sudo mkdir -p /usr/etc/LIPS/lib
+ $ vi ~/network.json   //optional, if you want to re-assign IP address for connection
+ $ sudo cp ~/network.json /usr/etc/LIPS/lib/
+```
+
+ - run the app
+```
+ $ cd ~/deploy/<install_home_name_you_want>/ae400_camera-pkg
+ $ ./app/ae400_camera/ae400_camera
+```
+
+ 4. open a web brower, connect to http://*<robot_ip>:3000*
+
+ 5. from left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
