@@ -28,6 +28,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_new_http_archive", "isaac_http_archive")
 load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_new_local_repository")
+load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_git_repository", "isaac_new_git_repository")
 
 def clean_dep(dep):
     return str(Label(dep))
@@ -42,12 +43,10 @@ def ae400_workspace():
         licenses = ["@com_google_absl//:COPYRIGHT"],
     )
 
-    isaac_new_http_archive(
-        name = "ae400cs",
-	build_file = clean_dep("//third_party:ae400.BUILD"),
-        sha256 = "c1a68fea026c25f16b2683531a3d5fd1abeffb72e5a49cbb34f82c3e5f0872b2",
-        url = "https://filebox.lips-hci.com/index.php/s/lobugJWAfDV4bTN/download",
-        type = "tar.gz",
-        strip_prefix = "ae400",
-        licenses = ["@ae400cs//:LICENSE"],
+    isaac_new_git_repository(
+        name = "ae400_realsense_sdk",
+        remote = "https://github.com/lips-hci/ae400-realsense-sdk.git",
+        commit = "97535ee98bc9001b316eeeee6664933959087a13",
+        build_file = clean_dep("//third_party:ae400.BUILD"),
+        licenses = ["@ae400_realsense_sdk//:LICENSE"],
     )

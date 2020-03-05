@@ -7,8 +7,14 @@ and any modifications thereto. Any use, reproduction, disclosure or
 distribution of this software and related documentation without an express
 license agreement from NVIDIA CORPORATION is strictly prohibited.
 """
+"""
+Copyright (c) 2020, LIPS Corporation. All rights reserved.
+
+Update History:
+2020-03-10: first version to use ae400-realsense-sdk release v0.9.0.7
+"""
 # Description:
-#   Realsense sdk
+#   Support Isaac 2019.3 based on LIPS AE400 Realsense SDK
 
 licenses(["notice"])  # Apache 2.0. See LICENSE file
 
@@ -17,16 +23,58 @@ exports_files([
     "COPYING",
 ])
 
-cc_import(
-    name = "libis4",
-    shared_library = select({
-        "@com_nvidia_isaac//engine/build:platform_x86_64": "lib/x64/libis4.so",
-        "@com_nvidia_isaac//engine/build:platform_jetpack43": "lib/aarch64/libis4.so",
-    })
+# Use backend-ethernet v0.9 for RS release 2.17.1 ~ 2.20
+# TODO: next SDK release we will update this lib to v1.0
+#   since RS SDK release is 2.21 ~ 2.3x
+cc_library(
+    name = "libbackend_ethernet",
+    srcs = glob(
+        [
+            "third-party/easyloggingpp/src/easylogging++.cc",
+        ]) + select({
+            "@com_nvidia_isaac//engine/build:platform_x86_64": [
+                "third-party/lips/lib/linux/amd64/libbackend-ethernet.a",
+            ],
+            "@com_nvidia_isaac//engine/build:platform_aarch64": [
+                "third-party/lips/lib/linux/arm64/libbackend-ethernet.a",
+            ],
+        }),
+    hdrs = glob([
+        "include/librealsense2/**/*.h*",
+        "third-party/easyloggingpp/src/easylogging++.h",
+    ]),
+    copts = [
+        # When preprocessing, do not shorten system header paths with canonicalization.
+        "-fno-canonical-system-headers",
+        # Disable all warnings.
+        # librealsense2 produces a large number of warnings. Not all can blocked with -Wno- flags.
+        # So we need to use the heavy handed approach of disabling all warnings.
+        "-w",
+        "-Wno-error",
+    ],
+    linkopts = [
+        "-fPIC",
+    ],
+    defines = [
+        "BUILD_EASYLOGGINGPP",
+        "ELPP_NO_DEFAULT_LOG_FILE",
+        "ELPP_THREAD_SAFE",
+        "RS2_USE_V4L2_BACKEND",
+        "HWM_OVER_XU",
+    ],
+    includes = [
+        "include",
+        "src",
+        "third-party/easyloggingpp/src",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "@libusb",
+    ],
 )
 
 cc_library(
-    name = "ae400cs",
+    name = "ae400_realsense_sdk",
     srcs = glob(
         ["src/**/*.cpp"],
         exclude = [
@@ -65,7 +113,7 @@ cc_library(
         ":realsense-file",
         ":sqlite",
         "@libusb",
-        ":libis4",
+        ":libbackend_ethernet",
     ],
 )
 

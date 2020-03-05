@@ -14,7 +14,7 @@ isaac_component(
     name = "ae400_camera_comp",
     deps = [
         "@com_nvidia_isaac//engine/gems/geometry:pinhole",
-        "@ae400cs",
+        "@ae400_realsense_sdk",
     ],
 )
 
