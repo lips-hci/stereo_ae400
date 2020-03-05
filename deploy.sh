@@ -88,7 +88,7 @@ if [ -z "$HOST" ]; then
 fi
 
 if [ -z "$DEVICE" ]; then
-  echo "Error: Desired target device must be specified with -d DEVICE. Valid choices: 'jetpack42', 'x86_64'."
+  echo "Error: Desired target device must be specified with -d DEVICE. Valid choices: 'jetpack43', 'x86_64'."
   exit 1
 fi
 
