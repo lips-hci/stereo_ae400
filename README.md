@@ -23,7 +23,7 @@
 
 
 
-Save Isaac SDK to the folder ~/Download, or any directory you preferred.
+Download Isaac SDK to the folder ~/Downloads, or any directory you preferred.
 
 :bulb: The branch '_master_' now supports the latest Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193) and it requires jetpack43 for embedded side.
 
@@ -32,14 +32,16 @@ For users who want to stay at Isaac release 2019.2, please switch your working b
  - You can get it [isaac-sdk-2019-2-30e21124-tar-xz](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz) from NVIDIA download archive
 
 
-4. git clone the LIPS stereo_ae400 workspace by below commands:
+4. git clone the LIPS stereo_ae400 workspace:
 ```
-$ cd ~/Download
+$ cd ~/Downloads
 $ git clone https://github.com/lips-hci/stereo_ae400.git
 ```
 
-   :bulb: This workspace now runs AE400 SDK **0.9.0.5** at host-side, and device firmware version **1.1**.
-   We will upgrade it soon! Please visit LIPS open-source community https://github.com/lips-hci to find more developer resources or [contact us](https://www.lips-hci.com/contact) for support.
+:bulb: NEW! The branch '_master_' now runs AE400 RealSense SDK **v0.9.0.7** at host-side, device firmware minimum requirement is **1.4**. Please [contact us](https://www.lips-hci.com/contact) to get firmware upgrade support.
+ - If your device is still firmware 1.1, you can use branch '_sdk-v0.9.0.5_' for development.
+
+:point_right: [How to check my AE400 firmware version?](doc/check_ae400_firmware_version.md)
 
 #### Learn more
 
