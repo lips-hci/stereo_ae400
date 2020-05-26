@@ -17,13 +17,14 @@ license agreement from NVIDIA CORPORATION is strictly prohibited.
 #include "messages/messages.hpp"
 
 namespace isaac {
+namespace lips {
 
-// RealsenseCamera is an Isaac codelet for the Realsense D435 camera that provides color and
+// AE400Camera is an Isaac codelet for the Realsense D435 camera that provides color and
 // depth images. The sensor can also provide raw IR images, however this is currently not supported.
-class RealsenseCamera : public alice::Codelet {
+class AE400Camera : public alice::Codelet {
  public:
-  RealsenseCamera();
-  ~RealsenseCamera();
+  AE400Camera();
+  ~AE400Camera();
 
   void start() override;
   void tick() override;
@@ -77,6 +78,7 @@ class RealsenseCamera : public alice::Codelet {
   std::unique_ptr<Impl> impl_;
 };
 
+}  // namespace lips
 }  // namespace isaac
 
-ISAAC_ALICE_REGISTER_CODELET(isaac::RealsenseCamera);
+ISAAC_ALICE_REGISTER_CODELET(isaac::lips::AE400Camera);

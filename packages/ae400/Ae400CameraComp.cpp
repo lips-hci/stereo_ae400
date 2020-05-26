@@ -20,6 +20,7 @@ license agreement from NVIDIA CORPORATION is strictly prohibited.
 #include "messages/camera.hpp"
 
 namespace isaac {
+namespace lips {
 
 namespace {
 
@@ -62,18 +63,18 @@ void SetSensorOption(const rs2_option& option, float value, rs2::sensor& sensor)
 
 }  // namespace
 
-RealsenseCamera::RealsenseCamera() {}
-RealsenseCamera::~RealsenseCamera() {}
+AE400Camera::AE400Camera() {}
+AE400Camera::~AE400Camera() {}
 
 // Stores various Realsense options
-struct RealsenseCamera::Impl {
+struct AE400Camera::Impl {
   rs2::pipeline pipe;  // used to start the pipeline and wait for frames
   rs2::align align_to = rs2::align(RS2_STREAM_COLOR);  // align color and depth?
   rs2::device_list devices;  // list of realsense devices attached
   bool auto_exposure_enabled;  // control auto exposure
 };
 
-void RealsenseCamera::start() {
+void AE400Camera::start() {
   try {
     impl_ = std::make_unique<Impl>();
 
@@ -119,7 +120,7 @@ void RealsenseCamera::start() {
   tickBlocking();
 }
 
-void RealsenseCamera::tick() {
+void AE400Camera::tick() {
   try {
     // check device settings, and update as needed
     // comment 3-line below to improve performance, but
@@ -185,7 +186,7 @@ void RealsenseCamera::tick() {
   }
 }
 
-void RealsenseCamera::stop() {
+void AE400Camera::stop() {
   try {
     impl_.reset();
   } catch (const rs2::error& e) {
@@ -194,7 +195,7 @@ void RealsenseCamera::stop() {
   }
 }
 
-void RealsenseCamera::initializeDeviceConfig(const rs2::device& dev) {
+void AE400Camera::initializeDeviceConfig(const rs2::device& dev) {
   // NOTE: this method is called before the pipeline is started, and not all
   // options can be configured before the sensor starts.
   for (auto& sensor : dev.query_sensors()) {
@@ -204,7 +205,7 @@ void RealsenseCamera::initializeDeviceConfig(const rs2::device& dev) {
   }
 }
 
-void RealsenseCamera::updateDeviceConfig(const rs2::device& dev) {
+void AE400Camera::updateDeviceConfig(const rs2::device& dev) {
   for (auto& sensor : dev.query_sensors()) {
     if (impl_->auto_exposure_enabled != get_enable_auto_exposure()) {
       SetSensorOption(RS2_OPTION_ENABLE_AUTO_EXPOSURE, get_enable_auto_exposure(), sensor);
@@ -214,4 +215,5 @@ void RealsenseCamera::updateDeviceConfig(const rs2::device& dev) {
   impl_->auto_exposure_enabled = get_enable_auto_exposure();
 }
 
+}  // namespace lips
 }  // namespace isaac

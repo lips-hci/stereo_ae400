@@ -34,7 +34,7 @@ local_repository(
     path = "/home/jsm/Downloads/isaac",
 )
 
-load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_git_repository", "isaac_new_http_archive")
+load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_git_repository", "isaac_http_archive")
 load("@com_nvidia_isaac//third_party:engine.bzl", "isaac_engine_workspace")
 load("@com_nvidia_isaac//third_party:packages.bzl", "isaac_packages_workspace")
 load("@com_nvidia_isaac//third_party:ros.bzl", "isaac_ros_workspace")
@@ -49,7 +49,7 @@ isaac_ros_workspace()
 isaac_zed_workspace()
 
 
-isaac_new_http_archive(
+isaac_http_archive(
     name = "org_lzma_lzma",
     build_file = "@com_nvidia_isaac//third_party:lzma.BUILD",
     licenses = ["@org_lzma_lzma//:COPYING"],

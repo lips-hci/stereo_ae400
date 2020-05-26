@@ -101,7 +101,7 @@
           },
           {
             "name": "realsense",
-            "type": "isaac::RealsenseCamera"
+            "type": "isaac::lips::AE400Camera"
           }
         ]
       },

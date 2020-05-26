@@ -35,7 +35,7 @@ cc_library(
             "@com_nvidia_isaac//engine/build:platform_x86_64": [
                 "third-party/lips/lib/linux/amd64/libbackend-ethernet.a",
             ],
-            "@com_nvidia_isaac//engine/build:platform_aarch64": [
+            "@com_nvidia_isaac//engine/build:platform_jetpack43": [
                 "third-party/lips/lib/linux/arm64/libbackend-ethernet.a",
             ],
         }),
@@ -90,6 +90,7 @@ cc_library(
         "src/**/*.h",
         "src/**/*.hpp",
     ]),
+    alwayslink=True,
     copts = [
         # When preprocessing, do not shorten system header paths with canonicalization.
         "-fno-canonical-system-headers",
