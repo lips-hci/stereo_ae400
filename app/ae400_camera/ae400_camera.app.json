@@ -7,12 +7,17 @@
   ],
   "config": {
     "camera": {
-      "realsense": {
+      "ae400": {
         "rows": 360,
         "cols": 640,
-        "rgb_framerate": 15,
         "depth_framerate": 15,
-        "align_to_color": true,
+        "ir_framerate": 15,
+        "rgb_framerate": 30,
+        "enable_depth": true,
+        "enable_ir_stereo": true,
+        "enable_rgb": true,
+        "enable_depth_laser": false,
+        "align_to_color": false,
         "frame_queue_size": 2,
         "auto_exposure_priority": false
       }
@@ -35,6 +40,14 @@
           [0,     0, 255],
           [0,     0, 128]
         ]
+      },
+      "left_ir": {
+        "camera_name": "AE400 Left IR",
+        "reduce_scale": 2
+      },
+      "right_ir": {
+        "camera_name": "AE400 Right IR",
+        "reduce_scale": 2
       }
     },
     "point_cloud": {
@@ -48,6 +61,30 @@
         "port": 3000,
         "ui_config": {
           "windows": {
+            "AE400 - Left IR": {
+              "renderer": "2d",
+              "dims": {
+                "width": 640,
+                "height": 360
+              },
+              "channels": [
+                {
+                  "name": "ae400_camera/viewer/left_ir/Color"
+                }
+              ]
+            },
+            "AE400 - Right IR": {
+              "renderer": "2d",
+              "dims": {
+                "width": 640,
+                "height": 360
+              },
+              "channels": [
+                {
+                  "name": "ae400_camera/viewer/right_ir/Color"
+                }
+              ]
+            },
             "AE400 - Color": {
               "renderer": "2d",
               "dims": {
@@ -100,7 +137,7 @@
             "type": "isaac::alice::MessageLedger"
           },
           {
-            "name": "realsense",
+            "name": "ae400",
             "type": "isaac::lips::AE400Camera"
           }
         ]
@@ -118,6 +155,14 @@
           },
           {
             "name": "color",
+            "type": "isaac::viewers::ColorCameraViewer"
+          },
+          {
+            "name": "left_ir",
+            "type": "isaac::viewers::ColorCameraViewer"
+          },
+          {
+            "name": "right_ir",
             "type": "isaac::viewers::ColorCameraViewer"
           }
         ]
@@ -142,19 +187,27 @@
     ],
     "edges": [
       {
-        "source": "camera/realsense/depth",
+        "source": "camera/ae400/depth",
         "target": "viewer/depth/depth_listener"
       },
       {
-        "source": "camera/realsense/color",
+        "source": "camera/ae400/color",
         "target": "viewer/color/color_listener"
       },
       {
-        "source": "camera/realsense/depth",
+        "source": "camera/ae400/left_ir",
+        "target": "viewer/left_ir/color_listener"
+      },
+      {
+        "source": "camera/ae400/right_ir",
+        "target": "viewer/right_ir/color_listener"
+      },
+      {
+        "source": "camera/ae400/depth",
         "target": "point_cloud/depth_to_pointcloud/depth"
       },
       {
-        "source": "camera/realsense/color",
+        "source": "camera/ae400/color",
         "target": "point_cloud/depth_to_pointcloud/color"
       },
       {

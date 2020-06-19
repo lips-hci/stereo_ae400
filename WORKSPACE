@@ -1,34 +1,17 @@
 """
 Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
- * Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
- * Neither the name of NVIDIA CORPORATION nor the names of its
-   contributors may be used to endorse or promote products derived
-   from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+NVIDIA CORPORATION and its licensors retain all intellectual property
+and proprietary rights in and to this software, related documentation
+and any modifications thereto. Any use, reproduction, disclosure or
+distribution of this software and related documentation without an express
+license agreement from NVIDIA CORPORATION is strictly prohibited.
 """
 
 workspace(name = "ae400_sample")
 
-# Point following dependency to Isaac SDK night Release 0528 downloaded from https://developer.nvidia.com/isaac/downloads
+# Point following dependency to latest Isaac SDK Release
+# downloaded from https://developer.nvidia.com/isaac/downloads (login required)
 local_repository(
     name = "com_nvidia_isaac",
     path = "/home/jsm/Downloads/isaac",
@@ -48,7 +31,10 @@ isaac_ros_workspace()
 
 isaac_zed_workspace()
 
+####################################################################################################
+# Load cartographer
 
+# Loads before boost to override for aarch64 specific config
 isaac_http_archive(
     name = "org_lzma_lzma",
     build_file = "@com_nvidia_isaac//third_party:lzma.BUILD",
@@ -61,18 +47,46 @@ isaac_http_archive(
 
 # Loads boost c++ library (https://www.boost.org/) and
 # custom bazel build support (https://github.com/nelhage/rules_boost/)
-# explicitly for cartographer
-# due to bazel bug: https://github.com/bazelbuild/bazel/issues/1550
-isaac_git_repository(
+# explicitly due to bazel bug: https://github.com/bazelbuild/bazel/issues/1550
+isaac_http_archive(
     name = "com_github_nelhage_rules_boost",
-    commit = "82ae1790cef07f3fd618592ad227fe2d66fe0b31",
     licenses = ["@com_github_nelhage_rules_boost//:LICENSE"],
-    remote = "https://github.com/nelhage/rules_boost.git",
+    patches = ["@com_nvidia_isaac//third_party:rules_boost.patch"],
+    sha256 = "1479f6a46d37c415b0f803186bacb7a78f76305331c556bba20d13247622752a",
+    type = "tar.gz",
+    url = "https://developer.nvidia.com/isaac/download/third_party/rules_boost-82ae1790cef07f3fd618592ad227fe2d66fe0b31-tar-gz",
 )
 
 load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
 
 boost_deps()
+
+isaac_http_archive(
+    name = "com_github_googlecartographer_cartographer",
+    licenses = ["@com_github_googlecartographer_cartographer//:LICENSE"],
+    sha256 = "a52591e5f7cd2a4bb63c005addbcfaa751cd0b19a223c800b5e90afb5055d946",
+    type = "tar.gz",
+    url = "https://developer.nvidia.com/isaac/download/third_party/cartographer-bcd5486025df4f601c3977c44a5e00e9c80b4975-tar-gz",
+)
+
+load("@com_github_googlecartographer_cartographer//:bazel/repositories.bzl", "cartographer_repositories")
+
+cartographer_repositories()
+
+# Loads Google grpc C++ library (https://grpc.io/) explicitly for cartographer
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+
+grpc_deps()
+
+bind(
+    name = "zlib",
+    actual = "@net_zlib_zlib//:zlib",
+)
+
+# Loads Prometheus Library (https://github.com/jupp0r/prometheus-cpp/) explicitly for cartographer
+load("@com_github_jupp0r_prometheus_cpp//:repositories.bzl", "prometheus_cpp_repositories")
+
+prometheus_cpp_repositories()
 
 ####################################################################################################
 # Configures toolchain
@@ -81,9 +95,7 @@ load("@com_nvidia_isaac//engine/build/toolchain:toolchain.bzl", "toolchain_confi
 toolchain_configure(name = "toolchain")
 
 ####################################################################################################
-
 # LIPS AE400 specific dependencies
-
 load("//third_party:ae400.bzl", "ae400_workspace")
 
 ae400_workspace()
