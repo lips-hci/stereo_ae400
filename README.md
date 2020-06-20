@@ -12,38 +12,49 @@
 ## PREREQUISITE
 
 1. Prepare a Ubuntu 18.04 x64 desktop equipped with a NVIDIA video card that supports CUDA.
+ - download Isaac SDK to any directory you preferred, e.g. the folder ~/Downloads in your home directory.
 
-2. Install dependencies of desktop/Bazel/NVIDIA GPU Driver according to the following document:
-
- - https://docs.nvidia.com/isaac/isaac/doc/setup.html#prerequisites
-
-3. Download NVIDIA Isaac SDK from website:
-
+2. Download latest NVIDIA Isaac SDK from website:
  - https://developer.nvidia.com/isaac/downloads
 
+3. Install dependencies of desktop/Bazel/NVIDIA GPU Driver according to the following document:
+ - https://docs.nvidia.com/isaac/isaac/doc/setup.html#prerequisites
 
+  - Important! Remember to install Ubuntu dependencies by running this script (in SDK).
+  ```
+  ~/Downloads/isaac$ engine/build/scripts/install_dependencies.sh
+  ```
 
-Download Isaac SDK to the folder ~/Downloads, or any directory you preferred.
+4. git clone LIPS stereo_ae400 workspace:
+ ```
+ $ cd ~/Downloads
+ $ git clone https://github.com/lips-hci/stereo_ae400.git
+ ```
 
-:bulb: The branch '_master_' now supports the latest Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193) and it requires jetpack43 for embedded side.
+### Branch/tag information
 
+:bulb: The branch '_master_' now supports the latest Isaac SDK [2020.1](https://developer.nvidia.com/isaac-sdk-20200514-b2b122e2e) with new features.
+ - support left/right IR cameras
+ - more config options to control streams (Depth/RGB/IR)
 
-For users who want to stay at Isaac release 2019.2, please switch your working branch to '_isaac-2019.2_'.
- - You can get it [isaac-sdk-2019-2-30e21124-tar-xz](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz) from NVIDIA download archive
+With latest version, you can select left and right IR channels to view in Isaac Sight webpage.
+<img src="screenshot_sdk_2020.1_iSight_IR_images.png" width="600">
 
+#### support for previous releases
 
-4. git clone the LIPS stereo_ae400 workspace:
-```
-$ cd ~/Downloads
-$ git clone https://github.com/lips-hci/stereo_ae400.git
-```
+1. Switch to tag '_isaac-2019.3_' if you are using previous Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193).
 
-:bulb: NEW! The branch '_master_' now runs AE400 RealSense SDK **v0.9.0.7** at host-side, device firmware minimum requirement is **1.4**. Please [contact us](https://www.lips-hci.com/contact) to get firmware upgrade support.
- - If your device is still firmware 1.1, you can use branch '_sdk-v0.9.0.5_' for development.
+2. Switch to tag '_isaac-2019.2_' for users who want to stay at Isaac release [2019.2](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz).
 
-:point_right: [How to check my AE400 firmware version?](doc/check_ae400_firmware_version.md)
+### AE400 Firmware requirements
 
-#### Learn more
+1. :bulb: The branch '_master_' now runs AE400 RealSense SDK **v0.9.0.7** at host-side, device firmware minimum requirement is **1.4**. Please [contact us](https://www.lips-hci.com/contact) to get firmware upgrade support.
+
+2. If your device is still firmware 1.1, you should use tag '_sdk-v0.9.0.5_' for development.
+
+3. :point_right: [How to check my AE400 firmware version?](doc/check_ae400_firmware_version.md)
+
+### Learn more
 
 1. How to switch between Intel and NVIDIA video cards on Ubuntu?
 
@@ -121,7 +132,7 @@ $ git clone https://github.com/lips-hci/stereo_ae400.git
 
  From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
 
- Isaac Sight webpage
+ Here is a screenshot of Isaac Sight webpage.
  ![screenshot of Issac Sight](screenshot_IssacSight_ae400_demo.jpg)
 
 7. Enjoy!
