@@ -4,10 +4,12 @@
 
  - [Product Overview](https://www.lips-hci.com/product-page/lipsedge-ae400-industrial-3d-camera)
  - [Product Datasheet](https://filebox.lips-hci.com/index.php/s/ZNO5JggmYeddYcA?path=%2FDatasheet#pdfviewer)
- - [Developer Support](https://github.com/lips-hci)
- - Product Videos
-   * AE400 360° Product View and Introduction  [![AE400 Industrial 3D Camera](http://img.youtube.com/vi/kyjbJSM6CjQ/mqdefault.jpg)](https://www.youtube.com/watch?v=kyjbJSM6CjQ "LIPSedge™ AE400 Industrial 3D Camera")
-   * AE400 Point Cloud [![Point cloud demo](http://img.youtube.com/vi/oSCOOGzJRbo/mqdefault.jpg)](http://www.youtube.com/watch?v=oSCOOGzJRbo "LIPSedge™ AE400 Point Cloud")
+ - [Latest LIPS SDK & FW Upgrade](https://www.lips-hci.com/lipssdk)
+ 
+ | Title | Video |
+ | ----- | --- |
+ | AE400 360° Product View and Introduction | [![AE400 Industrial 3D Camera](http://img.youtube.com/vi/kyjbJSM6CjQ/mqdefault.jpg)](https://www.youtube.com/watch?v=kyjbJSM6CjQ "LIPSedge™ AE400 Industrial 3D Camera") |
+ | AE400 Point Cloud DEMO (use realsense-viewer) | [![Point cloud demo](http://img.youtube.com/vi/oSCOOGzJRbo/mqdefault.jpg)](http://www.youtube.com/watch?v=oSCOOGzJRbo "LIPSedge™ AE400 Point Cloud") |
 
 ## PREREQUISITE
 
@@ -48,11 +50,13 @@ With latest version, you can select left and right IR channels to view in Isaac 
 
 ### AE400 Firmware requirements
 
-1. :bulb: The branch '_master_' now runs AE400 RealSense SDK **v0.9.0.7** at host-side, device firmware minimum requirement is **1.4**. Please [contact us](https://www.lips-hci.com/contact) to get firmware upgrade support.
+1. :bulb: The branch '_master_' now runs AE400 RealSense SDK **v0.9.0.7** at host-side, device firmware minimum requirement is **1.4**.
+ * Release Note & [User Guide](https://filebox.lips-hci.com/index.php/s/jbTuhQKGSm5Q7FC) (see ch. 7.6 for Firmware Update)
 
-2. If your device is still firmware 1.1, you should use tag '_sdk-v0.9.0.5_' for development.
+2. :point_right: [How to check my AE400 firmware version?](doc/check_ae400_firmware_version.md)
 
-3. :point_right: [How to check my AE400 firmware version?](doc/check_ae400_firmware_version.md)
+3. If your device is still firmware 1.1, use tag '_sdk-v0.9.0.5_' for development.
+
 
 ### Learn more
 
@@ -77,7 +81,7 @@ With latest version, you can select left and right IR channels to view in Isaac 
 ```
  local_repository(
      name = "com_nvidia_isaac",
-     path = "/home/jsm/Downloads/isaac", # Here to sepcify your Issac SDK location, e.g. ~/Downloads/issac
+     path = "/home/xxx/Downloads/isaac", # Here to sepcify your Issac SDK location, e.g. ~/Downloads/issac, xxx is your username
  )
 ```
 
