@@ -33,10 +33,10 @@ cc_library(
             "third-party/easyloggingpp/src/easylogging++.cc",
         ]) + select({
             "@com_nvidia_isaac//engine/build:platform_x86_64": [
-                "third-party/lips/lib/linux/amd64/libbackend-ethernet.a",
+                "third-party/lips/lib/v1.0.0.2/linux/amd64/libbackend-ethernet.a",
             ],
             "@com_nvidia_isaac//engine/build:platform_jetpack43": [
-                "third-party/lips/lib/linux/arm64/libbackend-ethernet.a",
+                "third-party/lips/lib/v1.0.0.2/linux/arm64/libbackend-ethernet.a",
             ],
         }),
     hdrs = glob([
@@ -61,6 +61,7 @@ cc_library(
         "ELPP_THREAD_SAFE",
         "RS2_USE_V4L2_BACKEND",
         "HWM_OVER_XU",
+        "RASPBERRY_PI",
     ],
     includes = [
         "include",
@@ -78,13 +79,29 @@ cc_library(
     srcs = glob(
         ["src/**/*.cpp"],
         exclude = [
+            "src/android/*",
+            "src/android/jni/*",
+            "src/android/fw-logger/*",
+            "src/usbhost/*",
             "src/cuda/*",
+            "src/fw/*",
+            "src/gl/*",
             "src/libuvc/*",
+            "src/mf/*",
             "src/tm2/*",
             "src/win/*",
             "src/win7/*",
+            "src/winusb/*",
+            "src/ethernet/*",
+            "src/compression/*",
+            "src/ipDeviceCommon/*",
         ],
-    ),
+    ) + [
+        "common/fw/firmware-version.h",
+        "common/parser.hpp",
+        "third-party/stb_image.h",
+        "common/decompress-huffman.h",
+    ],
     hdrs = glob([
         "include/librealsense2/**/*.h*",
         "src/**/*.h",
@@ -103,6 +120,7 @@ cc_library(
     defines = [
         "RS2_USE_V4L2_BACKEND",
         "HWM_OVER_XU",
+        "RASPBERRY_PI",
     ],
     includes = [
         "include",
@@ -114,6 +132,7 @@ cc_library(
         ":realsense-file",
         ":sqlite",
         "@libusb",
+        ":rapidxml",
         ":libbackend_ethernet",
     ],
 )
@@ -166,4 +185,12 @@ cc_library(
 cc_library(
     name = "json",
     hdrs = ["third-party/json.hpp"],
+)
+
+cc_library(
+    name = "rapidxml",
+    hdrs = [
+        "third-party/rapidxml/rapidxml.hpp",
+        "third-party/rapidxml/rapidxml_utils.hpp",
+    ],
 )

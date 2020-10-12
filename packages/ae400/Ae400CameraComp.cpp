@@ -7,7 +7,11 @@ and any modifications thereto. Any use, reproduction, disclosure or
 distribution of this software and related documentation without an express
 license agreement from NVIDIA CORPORATION is strictly prohibited.
 */
+/*
+Copyright (c) 2020, LIPS CORPORATION. All rights reserved.
 
+Modify this driver to support LIPS AE400 Stereo Camera
+*/
 #include "Ae400CameraComp.hpp"
 
 #include <memory>
@@ -198,6 +202,7 @@ void AE400Camera::start() {
 
       impl_->dev = devices[get_dev_index()];
       serial_number = impl_->dev.get_info(RS2_CAMERA_INFO_SERIAL_NUMBER);
+      set_serial_number(serial_number);
     }
 
     // Check the firmware, and configure
@@ -261,7 +266,7 @@ void AE400Camera::tick() {
     // but we can not adjust auto exposure dynamically
     //
     // check device settings, and update as needed
-    //updateDeviceConfig(impl_->dev);
+    updateDeviceConfig(impl_->dev);
 
     // wait for new frames
     // All published RealSense frames are rectified so distortion parameters are all 0

@@ -7,6 +7,11 @@ and any modifications thereto. Any use, reproduction, disclosure or
 distribution of this software and related documentation without an express
 license agreement from NVIDIA CORPORATION is strictly prohibited.
 */
+/*
+Copyright (c) 2020, LIPS CORPORATION. All rights reserved.
+
+Modify this driver to support LIPS AE400 Stereo Camera
+*/
 #pragma once
 
 #include <memory>

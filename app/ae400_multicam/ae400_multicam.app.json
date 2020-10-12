@@ -1,0 +1,216 @@
+{
+    "name": "ae400_multicam",
+    "modules": [
+      "ae400",
+      "@com_nvidia_isaac//packages/rgbd_processing",
+      "@com_nvidia_isaac//packages/viewers"
+    ],
+    "config": {
+      "camera": {
+        "ae400": {
+          "rows": 360,
+          "cols": 640,
+          "rgb_framerate": 15,
+          "depth_framerate": 15,
+          "align_to_color": false,
+          "frame_queue_size": 2,
+          "auto_exposure_priority": false,
+          "dev_index": 0
+        }
+      },
+      "viewer": {
+        "color": {
+          "reduce_scale": 2,
+          "camera_name": "AE400 Color"
+        },
+        "depth": {
+          "reduce_scale": 2,
+          "min_visualization_depth": 0.2,
+          "max_visualization_depth": 5.0,
+          "camera_name": "AE400 Depth",
+          "colormap": [
+            [128,   0,   0],
+            [255,   0,   0],
+            [255, 255,   0],
+            [0,   255, 255],
+            [0,     0, 255],
+            [0,     0, 128]
+          ]
+        }
+      },
+      "camera_two": {
+        "ae400": {
+          "rows": 360,
+          "cols": 640,
+          "rgb_framerate": 15,
+          "depth_framerate": 15,
+          "align_to_color": true,
+          "frame_queue_size": 2,
+          "auto_exposure_priority": false,
+          "dev_index": 1
+        }
+      },
+      "viewer_two": {
+        "color": {
+          "reduce_scale": 2,
+          "camera_name": "AE400 Color"
+        },
+        "depth": {
+          "reduce_scale": 2,
+          "min_visualization_depth": 0.2,
+          "max_visualization_depth": 5.0,
+          "camera_name": "AE400 Depth",
+          "colormap": [
+            [128,   0,   0],
+            [255,   0,   0],
+            [255, 255,   0],
+            [0,   255, 255],
+            [0,     0, 255],
+            [0,     0, 128]
+          ]
+        }
+      },
+      "websight": {
+        "WebsightServer": {
+          "webroot": "external/com_nvidia_isaac/packages/sight/webroot",
+          "assetroot": "external/com_nvidia_isaac/packages/sight/isaac_assets",
+          "port": 3000,
+          "ui_config": {
+            "windows": {
+              "AE400 1 - Color": {
+                "renderer": "2d",
+                "dims": {
+                  "width": 640,
+                  "height": 360
+                },
+                "channels": [
+                  {
+                    "name": "ae400_multicam/viewer/color/Color"
+                  }
+                ]
+              },
+              "AE400 1 - Depth": {
+                "renderer": "2d",
+                "dims": {
+                  "width": 640,
+                  "height": 360
+                },
+                "channels": [
+                  {
+                    "name": "ae400_multicam/viewer/depth/Depth"
+                  }
+                ]
+              },
+              "AE400 2 - Color": {
+                "renderer": "2d",
+                "dims": {
+                  "width": 640,
+                  "height": 360
+                },
+                "channels": [
+                  {
+                    "name": "ae400_multicam/viewer_two/color/Color"
+                  }
+                ]
+              },
+              "AE400 2 - Depth": {
+                "renderer": "2d",
+                "dims": {
+                  "width": 640,
+                  "height": 360
+                },
+                "channels": [
+                  {
+                    "name": "ae400_multicam/viewer_two/depth/Depth"
+                  }
+                ]
+              }
+            },
+            "assets": {}
+          }
+        }
+      }
+    },
+    "graph": {
+      "nodes": [
+        {
+          "name": "camera",
+          "components": [
+            {
+              "name": "message_ledger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "ae400",
+              "type": "isaac::lips::AE400Camera"
+            }
+          ]
+        },
+        {
+          "name": "viewer",
+          "components": [
+            {
+              "name": "message_ledger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "depth",
+              "type": "isaac::viewers::DepthCameraViewer"
+            },
+            {
+              "name": "color",
+              "type": "isaac::viewers::ColorCameraViewer"
+            }
+          ]
+        },
+        {
+          "name": "camera_two",
+          "components": [
+            {
+              "name": "message_ledger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "ae400",
+              "type": "isaac::lips::AE400Camera"
+            }
+          ]
+        },
+        {
+          "name": "viewer_two",
+          "components": [
+            {
+              "name": "message_ledger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "depth",
+              "type": "isaac::viewers::DepthCameraViewer"
+            },
+            {
+              "name": "color",
+              "type": "isaac::viewers::ColorCameraViewer"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": "camera/ae400/depth",
+          "target": "viewer/depth/depth_listener"
+        },
+        {
+          "source": "camera/ae400/color",
+          "target": "viewer/color/color_listener"
+        },
+        {
+          "source": "camera_two/ae400/depth",
+          "target": "viewer_two/depth/depth_listener"
+        },
+        {
+          "source": "camera_two/ae400/color",
+          "target": "viewer_two/color/color_listener"
+        }
+      ]
+    }
+  }

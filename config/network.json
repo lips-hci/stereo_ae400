@@ -1,5 +1,9 @@
 {
+    "count": "1",
     "config": {
-        "ip": "192.168.0.100"
+        "_comment": "ip is for backward compatibility, ip1,ip2 are for multicam",
+        "ip": "192.168.0.100",
+        "ip1": "192.168.0.100",
+        "ip2": "192.168.1.100"
     }
 }
