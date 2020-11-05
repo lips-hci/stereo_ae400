@@ -58,13 +58,22 @@ class AE400Camera : public alice::Codelet {
   void stop() override;
 
   // The left IR camera image and intrinsics
-  ISAAC_PROTO_TX(ColorCameraProto, left_ir);
+  ISAAC_PROTO_TX(ImageProto, left_ir);
   // The right IR camera image and intrinsics
-  ISAAC_PROTO_TX(ColorCameraProto, right_ir);
+  ISAAC_PROTO_TX(ImageProto, right_ir);
   // The color camera image, which can be of type Image3ub for color or Image1ui16 for grayscale.
-  ISAAC_PROTO_TX(ColorCameraProto, color);
+  ISAAC_PROTO_TX(ImageProto, color);
   // The depth image (in meters) in the left IR camera frame
-  ISAAC_PROTO_TX(DepthCameraProto, depth);
+  ISAAC_PROTO_TX(ImageProto, depth);
+  // Intrinsics including pinhole and distortion parameters for the color camera
+  ISAAC_PROTO_TX(CameraIntrinsicsProto, color_intrinsics);
+  // Intrinsics including pinhole and distortion parameters for the left IR camera
+  ISAAC_PROTO_TX(CameraIntrinsicsProto, left_ir_intrinsics);
+  // Intrinsics including pinhole and distortion parameters for the right IR camera
+  ISAAC_PROTO_TX(CameraIntrinsicsProto, right_ir_intrinsics);
+  // Intrinsics including pinhole parameters for the depth camera
+  ISAAC_PROTO_TX(CameraIntrinsicsProto, depth_intrinsics);
+
   // IR stereo camera extrinsics (the right_T_left IR camera transformation).
   // The camera extrinsics doesn't change with time.
   ISAAC_POSE3(left_ir_camera, right_ir_camera);

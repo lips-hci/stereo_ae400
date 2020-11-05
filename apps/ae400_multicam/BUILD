@@ -8,14 +8,16 @@ distribution of this software and related documentation without an express
 license agreement from NVIDIA CORPORATION is strictly prohibited.
 """
 
-load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_app")
+load("@com_nvidia_isaac_sdk//bzl:module.bzl", "isaac_app")
 
 isaac_app(
-    name = "ae400_camera",
-    app_json_file = "ae400_camera.app.json",
+    name = "ae400_multicam",
+    app_json_file = "ae400_multicam.app.json",
     modules = [
         "ae400",
-        "@com_nvidia_isaac//packages/rgbd_processing",
-        "@com_nvidia_isaac//packages/viewers",
+        "@com_nvidia_isaac_sdk//packages/rgbd_processing",
+        "@com_nvidia_isaac_sdk//packages/sight",
+        "@com_nvidia_isaac_sdk//packages/viewers",
     ],
 )
+

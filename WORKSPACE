@@ -13,23 +13,35 @@ workspace(name = "ae400_sample")
 # Point following dependency to latest Isaac SDK Release
 # downloaded from https://developer.nvidia.com/isaac/downloads (login required)
 local_repository(
-    name = "com_nvidia_isaac",
-    path = "/home/jsm/Downloads/isaac",
+    name = "com_nvidia_isaac_engine",
+    path = "/home/nvidia/isaac/engine",
 )
 
-load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_git_repository", "isaac_http_archive")
-load("@com_nvidia_isaac//third_party:engine.bzl", "isaac_engine_workspace")
-load("@com_nvidia_isaac//third_party:packages.bzl", "isaac_packages_workspace")
-load("@com_nvidia_isaac//third_party:ros.bzl", "isaac_ros_workspace")
-load("@com_nvidia_isaac//third_party:zed.bzl", "isaac_zed_workspace")
+local_repository(
+    name = "com_nvidia_isaac_sdk",
+    path = "home/nvidia/isaac/sdk",
+)
+
+load("@com_nvidia_isaac_engine//bzl:deps.bzl", "isaac_http_archive")
+load("@com_nvidia_isaac_engine//third_party:engine.bzl", "isaac_engine_workspace")
 
 isaac_engine_workspace()
 
+load("@com_nvidia_isaac_sdk//third_party:assets.bzl", "isaac_assets_workspace")
+load("@com_nvidia_isaac_sdk//third_party:packages.bzl", "isaac_packages_workspace")
+load("@com_nvidia_isaac_sdk//third_party:ros.bzl", "isaac_ros_workspace")
+load("@com_nvidia_isaac_sdk//third_party:zed.bzl", "isaac_zed_workspace")
+load("@com_nvidia_isaac_sdk//packages/sensor_certification:sensor_certification.bzl", "sensor_certification_workspace")
+
 isaac_packages_workspace()
+
+isaac_assets_workspace()
 
 isaac_ros_workspace()
 
 isaac_zed_workspace()
+
+sensor_certification_workspace()
 
 ####################################################################################################
 # Load cartographer
@@ -37,7 +49,7 @@ isaac_zed_workspace()
 # Loads before boost to override for aarch64 specific config
 isaac_http_archive(
     name = "org_lzma_lzma",
-    build_file = "@com_nvidia_isaac//third_party:lzma.BUILD",
+    build_file = "@com_nvidia_isaac_sdk//third_party:lzma.BUILD",
     licenses = ["@org_lzma_lzma//:COPYING"],
     sha256 = "9717ae363760dedf573dad241420c5fea86256b65bc21d2cf71b2b12f0544f4b",
     strip_prefix = "xz-5.2.4",
@@ -45,13 +57,14 @@ isaac_http_archive(
     url = "https://developer.nvidia.com/isaac/download/third_party/xz-5-2-4-tar-xz",
 )
 
+####################################################################################################
 # Loads boost c++ library (https://www.boost.org/) and
 # custom bazel build support (https://github.com/nelhage/rules_boost/)
 # explicitly due to bazel bug: https://github.com/bazelbuild/bazel/issues/1550
 isaac_http_archive(
     name = "com_github_nelhage_rules_boost",
     licenses = ["@com_github_nelhage_rules_boost//:LICENSE"],
-    patches = ["@com_nvidia_isaac//third_party:rules_boost.patch"],
+    patches = ["@com_nvidia_isaac_engine//third_party:rules_boost.patch"],
     sha256 = "1479f6a46d37c415b0f803186bacb7a78f76305331c556bba20d13247622752a",
     type = "tar.gz",
     url = "https://developer.nvidia.com/isaac/download/third_party/rules_boost-82ae1790cef07f3fd618592ad227fe2d66fe0b31-tar-gz",
@@ -89,8 +102,9 @@ load("@com_github_jupp0r_prometheus_cpp//:repositories.bzl", "prometheus_cpp_rep
 prometheus_cpp_repositories()
 
 ####################################################################################################
+
 # Configures toolchain
-load("@com_nvidia_isaac//engine/build/toolchain:toolchain.bzl", "toolchain_configure")
+load("@com_nvidia_isaac_engine//toolchain:toolchain.bzl", "toolchain_configure")
 
 toolchain_configure(name = "toolchain")
 

@@ -8,12 +8,12 @@ distribution of this software and related documentation without an express
 license agreement from NVIDIA CORPORATION is strictly prohibited.
 """
 
-load("@com_nvidia_isaac//engine/build:isaac.bzl", "isaac_cc_module", "isaac_component")
+load("@com_nvidia_isaac_sdk//bzl:module.bzl", "isaac_cc_module", "isaac_component")
 
 isaac_component(
     name = "ae400_camera_comp",
     deps = [
-        "@com_nvidia_isaac//engine/gems/geometry:pinhole",
+        "@com_nvidia_isaac_engine//engine/gems/geometry:pinhole",
         "@ae400_realsense_sdk",
     ],
 )

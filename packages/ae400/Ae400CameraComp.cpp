@@ -236,7 +236,7 @@ void AE400Camera::start() {
     // start the pipeline
     impl_->profile = impl_->pipe.start(cfg);
   } catch (const rs2::error& e) {
-    reportFailure("RealSense error calling %s(%s): %s", e.get_failed_function().c_str(),
+    reportFailure("@%d RealSense error calling %s(%s): %s", __LINE__, e.get_failed_function().c_str(),
                   e.get_failed_args().c_str(), e.what());
     return;
   }
@@ -293,30 +293,21 @@ void AE400Camera::tick() {
       if (acqtime == 0) {
         acqtime = getAdjustedTimeStamp(color_frame.get_timestamp(), impl_->timestamp_info);
       }
-      auto proto_color = tx_color().initProto();
-      proto_color.setColorSpace(ColorCameraProto::ColorSpace::RGB);
-
-      ToProto(ToPinhole(color_frame), proto_color.initPinhole());
-      ToProto(std::move(ToColorImage(color_frame)), proto_color.initImage(), tx_color().buffers());
+      ToProto(std::move(ToColorImage(color_frame)), tx_color().initProto(), tx_color().buffers());
+      ToProto(ToPinhole(color_frame), tx_color_intrinsics().initProto().initPinhole());
     }
 
     if (ir_on) {
       // Obtain the left ir frame
       const rs2::video_frame left_frame = frames.get_infrared_frame(kLeftIrStreamId);
-      auto proto_left = tx_left_ir().initProto();
-      proto_left.setColorSpace(ColorCameraProto::ColorSpace::GRAYSCALE);
-
-      ToProto(ToPinhole(left_frame), proto_left.initPinhole());
-      ToProto(std::move(ToGreyImage(left_frame)), proto_left.initImage(), tx_left_ir().buffers());
+      ToProto(std::move(ToGreyImage(left_frame)), tx_left_ir().initProto(), tx_left_ir().buffers());
+      ToProto(ToPinhole(left_frame), tx_left_ir_intrinsics().initProto().initPinhole());
 
       // Obtain the right ir frame
       const rs2::video_frame right_frame = frames.get_infrared_frame(kRightIrStreamId);
-      auto proto_right = tx_right_ir().initProto();
-      proto_right.setColorSpace(ColorCameraProto::ColorSpace::GRAYSCALE);
-
-      ToProto(ToPinhole(right_frame), proto_right.initPinhole());
-      ToProto(std::move(ToGreyImage(right_frame)), proto_right.initImage(),
+      ToProto(std::move(ToGreyImage(right_frame)), tx_right_ir().initProto(),
               tx_right_ir().buffers());
+      ToProto(ToPinhole(right_frame), tx_right_ir_intrinsics().initProto().initPinhole());
 
       // SVIO tracker needs to recieve the actual IR frame timestamps as a hint
       // for the prediction algorithm to understand the temporal relationship
@@ -325,7 +316,9 @@ void AE400Camera::tick() {
       const int64_t ir_acqtime =
          getAdjustedTimeStamp(left_frame.get_timestamp(), impl_->ir_timestamp);
       tx_left_ir().publish(ir_acqtime);
+      tx_left_ir_intrinsics().publish(ir_acqtime);
       tx_right_ir().publish(ir_acqtime);
+      tx_right_ir_intrinsics().publish(ir_acqtime);
     }
 
     // Obtain and publish the depth image
@@ -339,22 +332,21 @@ void AE400Camera::tick() {
                                       depth_frame.get_height() * depth_frame.get_stride_in_bytes());
       ImageConstView1ui16 depth_image_view(depth_buffer, depth_frame.get_height(),
                                           depth_frame.get_width());
-      Image1f depth_image(depth_frame.get_height(), depth_frame.get_width());
+      Image1f depth_image(depth_image_view.dimensions());
       ConvertUi16ToF32(depth_image_view, depth_image, 0.001);
 
-      auto proto_depth = tx_depth().initProto();
-      ToProto(ToPinhole(depth_frame), proto_depth.initPinhole());
-      ToProto(std::move(depth_image), proto_depth.initDepthImage(), tx_depth().buffers());
-      proto_depth.setMinDepth(0.0);
-      proto_depth.setMaxDepth(10.0);
+      ToProto(ToPinhole(depth_frame), tx_depth_intrinsics().initProto().initPinhole());
+      ToProto(std::move(depth_image), tx_depth().initProto(), tx_depth().buffers());
       tx_depth().publish(acqtime);
+      tx_depth_intrinsics().publish(acqtime);
     }
 
     if (color_on) {
       tx_color().publish(acqtime);
+      tx_color_intrinsics().publish(acqtime);
     }
   } catch (const rs2::error& e) {
-    reportFailure("RealSense error calling %s(%s): %s", e.get_failed_function().c_str(),
+    reportFailure("@%d RealSense error calling %s(%s): %s", __LINE__, e.get_failed_function().c_str(),
                   e.get_failed_args().c_str(), e.what());
   }
 }
@@ -367,7 +359,7 @@ void AE400Camera::stop() {
     }
     impl_.reset();
   } catch (const rs2::error& e) {
-    reportFailure("RealSense error calling %s(%s): %s", e.get_failed_function().c_str(),
+    reportFailure("@%d RealSense error calling %s(%s): %s", __LINE__, e.get_failed_function().c_str(),
                   e.get_failed_args().c_str(), e.what());
   }
 }

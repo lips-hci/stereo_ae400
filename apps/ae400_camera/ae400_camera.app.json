@@ -2,8 +2,9 @@
   "name": "ae400_camera",
   "modules": [
     "ae400",
-    "@com_nvidia_isaac//packages/rgbd_processing",
-    "@com_nvidia_isaac//packages/viewers"
+    "@com_nvidia_isaac_sdk//packages/rgbd_processing",
+    "@com_nvidia_isaac_sdk//packages/sight",
+    "@com_nvidia_isaac_sdk//packages/viewers"
   ],
   "config": {
     "camera": {
@@ -57,8 +58,8 @@
     },
     "websight": {
       "WebsightServer": {
-        "webroot": "external/com_nvidia_isaac/packages/sight/webroot",
-        "assetroot": "external/com_nvidia_isaac/packages/sight/isaac_assets",
+        "webroot": "external/com_nvidia_isaac_sdk/packages/sight/webroot",
+        "assetroot": "external/com_nvidia_isaac_sdk/packages/sight/isaac_assets",
         "port": 3000,
         "ui_config": {
           "windows": {
@@ -70,7 +71,7 @@
               },
               "channels": [
                 {
-                  "name": "ae400_camera/viewer/left_ir/Color"
+                  "name": "ae400_camera/viewer/left_ir/image"
                 }
               ]
             },
@@ -82,7 +83,7 @@
               },
               "channels": [
                 {
-                  "name": "ae400_camera/viewer/right_ir/Color"
+                  "name": "ae400_camera/viewer/right_ir/image"
                 }
               ]
             },
@@ -94,7 +95,7 @@
               },
               "channels": [
                 {
-                  "name": "ae400_camera/viewer/color/Color"
+                  "name": "ae400_camera/viewer/color/image"
                 }
               ]
             },
@@ -156,15 +157,15 @@
           },
           {
             "name": "color",
-            "type": "isaac::viewers::ColorCameraViewer"
+            "type": "isaac::viewers::ImageViewer"
           },
           {
             "name": "left_ir",
-            "type": "isaac::viewers::ColorCameraViewer"
+            "type": "isaac::viewers::ImageViewer"
           },
           {
             "name": "right_ir",
-            "type": "isaac::viewers::ColorCameraViewer"
+            "type": "isaac::viewers::ImageViewer"
           }
         ]
       },
@@ -189,23 +190,31 @@
     "edges": [
       {
         "source": "camera/ae400/depth",
-        "target": "viewer/depth/depth_listener"
+        "target": "viewer/depth/depth"
+      },
+      {
+        "source": "camera/ae400/depth_intrinsics",
+        "target": "viewer/depth/intrinsics"
       },
       {
         "source": "camera/ae400/color",
-        "target": "viewer/color/color_listener"
+        "target": "viewer/color/image"
       },
       {
         "source": "camera/ae400/left_ir",
-        "target": "viewer/left_ir/color_listener"
+        "target": "viewer/left_ir/image"
       },
       {
         "source": "camera/ae400/right_ir",
-        "target": "viewer/right_ir/color_listener"
+        "target": "viewer/right_ir/image"
       },
       {
         "source": "camera/ae400/depth",
         "target": "point_cloud/depth_to_pointcloud/depth"
+      },
+      {
+        "source": "camera/ae400/depth_intrinsics",
+        "target": "point_cloud/depth_to_pointcloud/intrinsics"
       },
       {
         "source": "camera/ae400/color",

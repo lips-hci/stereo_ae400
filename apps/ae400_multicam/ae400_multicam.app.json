@@ -2,8 +2,9 @@
     "name": "ae400_multicam",
     "modules": [
       "ae400",
-      "@com_nvidia_isaac//packages/rgbd_processing",
-      "@com_nvidia_isaac//packages/viewers"
+      "@com_nvidia_isaac_sdk//packages/rgbd_processing",
+      "@com_nvidia_isaac_sdk//packages/viewers",
+      "@com_nvidia_isaac_sdk//packages/sight"
     ],
     "config": {
       "camera": {
@@ -72,8 +73,8 @@
       },
       "websight": {
         "WebsightServer": {
-          "webroot": "external/com_nvidia_isaac/packages/sight/webroot",
-          "assetroot": "external/com_nvidia_isaac/packages/sight/isaac_assets",
+          "webroot": "external/com_nvidia_isaac_sdk/packages/sight/webroot",
+          "assetroot": "external/com_nvidia_isaac_sdk/packages/sight/isaac_assets",
           "port": 3000,
           "ui_config": {
             "windows": {
@@ -85,7 +86,7 @@
                 },
                 "channels": [
                   {
-                    "name": "ae400_multicam/viewer/color/Color"
+                    "name": "ae400_multicam/viewer/color/image"
                   }
                 ]
               },
@@ -109,7 +110,7 @@
                 },
                 "channels": [
                   {
-                    "name": "ae400_multicam/viewer_two/color/Color"
+                    "name": "ae400_multicam/viewer_two/color/image"
                   }
                 ]
               },
@@ -159,7 +160,7 @@
             },
             {
               "name": "color",
-              "type": "isaac::viewers::ColorCameraViewer"
+              "type": "isaac::viewers::ImageViewer"
             }
           ]
         },
@@ -189,7 +190,7 @@
             },
             {
               "name": "color",
-              "type": "isaac::viewers::ColorCameraViewer"
+              "type": "isaac::viewers::ImageViewer"
             }
           ]
         }
@@ -197,19 +198,27 @@
       "edges": [
         {
           "source": "camera/ae400/depth",
-          "target": "viewer/depth/depth_listener"
+          "target": "viewer/depth/depth"
+        },
+        {
+          "source": "camera/ae400/depth_intrinsics",
+          "target": "viewer/depth/intrinsics"
         },
         {
           "source": "camera/ae400/color",
-          "target": "viewer/color/color_listener"
+          "target": "viewer/color/image"
         },
         {
           "source": "camera_two/ae400/depth",
-          "target": "viewer_two/depth/depth_listener"
+          "target": "viewer_two/depth/depth"
+        },
+        {
+          "source": "camera_two/ae400/depth_intrinsics",
+          "target": "viewer_two/depth/intrinsics"
         },
         {
           "source": "camera_two/ae400/color",
-          "target": "viewer_two/color/color_listener"
+          "target": "viewer_two/color/image"
         }
       ]
     }
