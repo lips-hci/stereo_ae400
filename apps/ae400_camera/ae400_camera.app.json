@@ -4,7 +4,8 @@
     "ae400",
     "@com_nvidia_isaac_sdk//packages/rgbd_processing",
     "@com_nvidia_isaac_sdk//packages/sight",
-    "@com_nvidia_isaac_sdk//packages/viewers"
+    "@com_nvidia_isaac_sdk//packages/viewers",
+    "@com_nvidia_isaac_sdk//packages/imu"
   ],
   "config": {
     "camera": {
@@ -19,6 +20,7 @@
         "enable_rgb": true,
         "enable_depth_laser": false,
         "align_to_color": false,
+        "enable_imu": true,
         "frame_queue_size": 2,
         "auto_exposure_priority": false
       }
@@ -122,6 +124,42 @@
                   "name": "ae400_camera/point_cloud/viewer/points"
                 }
               ]
+            },
+            "AE400 - Imu - CorrectedAngularVelocity": {
+              "renderer": "plot",
+              "dims": {
+                "width": 500,
+                "height": 500
+              },
+              "channels": [
+                {
+                  "name": "ae400_camera/imu/imu_corrector/CorrectedAngularVelocity.x"
+                },
+                {
+                  "name": "ae400_camera/imu/imu_corrector/CorrectedAngularVelocity.y"
+                },
+                {
+                  "name": "ae400_camera/imu/imu_corrector/CorrectedAngularVelocity.z"
+                }
+              ]
+            },
+            "AE400 - imu - CorrectedLinearAcceleration": {
+              "renderer": "plot",
+              "dims": {
+                "width": 500,
+                "height": 500
+              },
+              "channels": [
+                {
+                  "name": "ae400_camera/imu/imu_corrector/CorrectedLinearAcceleration.x"
+                },
+                {
+                  "name": "ae400_camera/imu/imu_corrector/CorrectedLinearAcceleration.y"
+                },
+                {
+                  "name": "ae400_camera/imu/imu_corrector/CorrectedLinearAcceleration.z"
+                }
+              ]
             }
           },
           "assets": {}
@@ -166,6 +204,19 @@
           {
             "name": "right_ir",
             "type": "isaac::viewers::ImageViewer"
+          }
+        ]
+      },
+      {
+        "name":"imu",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "imu_corrector",
+            "type": "isaac::imu::ImuCorrector"
           }
         ]
       },
@@ -223,6 +274,10 @@
       {
         "source": "point_cloud/depth_to_pointcloud/cloud",
         "target": "point_cloud/viewer/cloud"
+      },
+      {
+        "source": "camera/ae400/imu_raw",
+        "target": "imu/imu_corrector/raw"
       }
     ]
   }

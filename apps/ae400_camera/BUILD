@@ -18,5 +18,6 @@ isaac_app(
         "@com_nvidia_isaac_sdk//packages/rgbd_processing",
         "@com_nvidia_isaac_sdk//packages/sight",
         "@com_nvidia_isaac_sdk//packages/viewers",
+        "@com_nvidia_isaac_sdk//packages/imu",
     ],
 )

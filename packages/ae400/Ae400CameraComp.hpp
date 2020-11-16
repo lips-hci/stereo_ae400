@@ -20,7 +20,9 @@ Modify this driver to support LIPS AE400 Stereo Camera
 #include "engine/alice/alice_codelet.hpp"
 #include "engine/core/math/types.hpp"
 #include "librealsense2/rs.hpp"
+#include "librealsense2/lips_ae400_imu.h"
 #include "messages/camera.capnp.h"
+#include "messages/imu.capnp.h"
 
 namespace isaac {
 namespace lips {
@@ -73,6 +75,8 @@ class AE400Camera : public alice::Codelet {
   ISAAC_PROTO_TX(CameraIntrinsicsProto, right_ir_intrinsics);
   // Intrinsics including pinhole parameters for the depth camera
   ISAAC_PROTO_TX(CameraIntrinsicsProto, depth_intrinsics);
+  // Sensor data from the built-in IMU device (Accelerometer and Gyroscope)
+  ISAAC_PROTO_TX(ImuProto, imu_raw);
 
   // IR stereo camera extrinsics (the right_T_left IR camera transformation).
   // The camera extrinsics doesn't change with time.
@@ -118,6 +122,10 @@ class AE400Camera : public alice::Codelet {
   // on the order the Realsense library detects the cameras, and may vary based on mounting order.
   // By default the first camera device in the list is chosen. This camera choice can be overridden
   // by the serial number parameter below.
+  ISAAC_PARAM(bool, enable_imu, true);
+  // Enable acquisition and publication of IMU device reading.
+  // Frequency is set to 30 currently to align Depth frame FPS.
+  // This setting can't be changed at runtime.
   ISAAC_PARAM(int, dev_index, 0)
   // An alternative way to specify the desired device in a multicamera setup. The serial number of
   // the Realsense camera can be found printed on the device. If specified, this parameter will take

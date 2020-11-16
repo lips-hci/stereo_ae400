@@ -23,6 +23,8 @@ Modify this driver to support LIPS AE400 Stereo Camera
 #include "engine/gems/image/utils.hpp"
 #include "messages/camera.hpp"
 
+using namespace lips::ae400;
+
 namespace isaac {
 
 namespace lips {
@@ -344,6 +346,27 @@ void AE400Camera::tick() {
     if (color_on) {
       tx_color().publish(acqtime);
       tx_color_intrinsics().publish(acqtime);
+    }
+
+    if(get_enable_imu()) {
+      lips_ae400_imu imu_data;
+      if ( get_imu_data(0, &imu_data) == 0)
+      {
+        auto imu_datamsg = tx_imu_raw().initProto();
+        double imu_acqtime = imu_data.timestamp * 0.001; //ms converts to sec
+
+        // set accelerometer data
+        imu_datamsg.setLinearAccelerationX(imu_data.accel_x);
+        imu_datamsg.setLinearAccelerationY(imu_data.accel_y);
+        imu_datamsg.setLinearAccelerationZ(imu_data.accel_z);
+
+        // set gyroscope data
+        imu_datamsg.setAngularVelocityX(imu_data.gyro_x);
+        imu_datamsg.setAngularVelocityY(imu_data.gyro_y);
+        imu_datamsg.setAngularVelocityZ(imu_data.gyro_z);
+
+        tx_imu_raw().publish(imu_acqtime);
+      }
     }
   } catch (const rs2::error& e) {
     reportFailure("@%d RealSense error calling %s(%s): %s", __LINE__, e.get_failed_function().c_str(),
