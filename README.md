@@ -27,35 +27,72 @@
   ~/isaac$ engine/build/scripts/install_dependencies.sh
   ```
 
-4. git clone LIPS stereo_ae400 workspace:
- ```
- $ cd ~/
- $ git clone https://github.com/lips-hci/stereo_ae400.git
- ```
+## Quick Start
 
-### Branch/tag information
+1. Download latest NVIDIA Isaac SDK
+- https://developer.nvidia.com/isaac/downloads
 
-:bulb: The branch '_master_' now supports the latest Isaac SDK [2020.1](https://developer.nvidia.com/isaac-sdk-20200514-b2b122e2e) with new features.
- - support left/right IR cameras
- - more config options to control streams (Depth/RGB/IR)
+2. Git clone LIPS stereo_ae400 workspace:
+```
+$ cd ~/
+$ git clone https://github.com/lips-hci/stereo_ae400.git
+```
 
-With latest version, you can select left and right IR channels to view in Isaac Sight webpage.
-<img src="screenshot_sdk_2020.1_iSight_IR_images.png" width="600">
+3. Specify path of Isaac SDK in the WORKSPACE file under folder stereo_ae400.
+```
+local_repository(
+     name = "com_nvidia_isaac",
+     path = "/home/nvidia/isaac", # Here to sepcify your Isaac SDK location, change nvidia by your username
+ )
+```
 
-#### support for previous releases
+4. Build application under folder stereo_ae400.
+```
+$ cd ~/stereo_ae400
+$ bazel build //apps/ae400_camera
+```
 
-1. Switch to tag '_isaac-2019.3_' if you are using previous Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193).
+5. Run app
+```
+$ bazel run //apps/ae400_camera
+```
 
-2. Switch to tag '_isaac-2019.2_' for users who want to stay at Isaac release [2019.2](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz).
 
 ### AE400 Firmware requirements
 
-1. :bulb: The branch '_master_' now runs AE400 RealSense SDK **v0.9.0.7** at host-side, device firmware minimum requirement is **1.4**.
- * Release Note & [User Guide](https://filebox.lips-hci.com/index.php/s/jbTuhQKGSm5Q7FC) (see ch. 7.6 for Firmware Update)
+1. The branch '_master_' now runs AE400 RealSense SDK **v1.0.0.2** at host-side, device firmware minimum requirement is **V2.1**.
+ - [Release Note](https://filebox.lips-hci.com/index.php/s/twUlwqdzNFl7RAc?path=%2FRelease%20Note)
+ - [User Guide](https://filebox.lips-hci.com/index.php/s/twUlwqdzNFl7RAc?path=%2FUser%20Guide)
+   (Please refer section 'Updating Firmware')
 
 2. :point_right: [How to check my AE400 firmware version?](doc/check_ae400_firmware_version.md)
 
+3. The pervious firmware **v1.4** works for AE400 SDK '_v0.9.0.7_' on ISAAC SDK 2019.x~2020.1
+
 3. If your device is still firmware 1.1, use tag '_sdk-v0.9.0.5_' for development.
+
+
+### Branch/tag information
+
+:bulb: The branch '_master_' now supports latest ISAAC SDK [2020.2](https://developer.nvidia.com/isaac/downloads) with new features.
+ - reading depth/color camera intrinisics
+ - reading IMU 6-axis sensor data
+ - new app multicam wich can demo both depth and color streaming from 2 (or more) AE400 cameras
+<img src="screenshot_isaac_sight_ae400_imu_viewers.png" width="600">
+
+AE400 new features for Isaac 2020.1
+ - support left/right IR cameras
+ - more config options to control streams (Depth/RGB/IR)
+
+From this version, you can select left and right IR channels to view in Isaac Sight webpage.
+<img src="screenshot_sdk_2020.1_iSight_IR_images.png" width="600">
+
+
+previous releases support
+
+ - Switch to tag '_isaac-2019.3_' if you are using previous Isaac SDK [2019.3](https://developer.nvidia.com/isaac-sdk-20193).
+
+ - Switch to tag '_isaac-2019.2_' for users who want to stay at Isaac release [2019.2](https://developer.nvidia.com/isaac/download/releases/2019.2/isaac-sdk-2019-2-30e21124-tar-xz).
 
 
 ### Learn more
@@ -68,33 +105,10 @@ With latest version, you can select left and right IR channels to view in Isaac 
 
  - https://gist.github.com/bogdan-kulynych/f64eb148eeef9696c70d485a76e42c3a
 
-## Build sample application for AE400 camera on Isaac SDK
 
-1. create a folder named 'isaac' under ~/ and untar the Isaac SDK into it
-```
- $ mkdir -p ~/isaac
- $ cd ~/
- $ tar Jxvpf isaac-sdk-2019.2-30e21124.tar.xz -C isaac
-```
+## Network configurations
 
-2. modify the path in the WORKSPACE under the stereo_ae400 folder.
-```
- local_repository(
-     name = "com_nvidia_isaac",
-     path = "/home/<username>/isaac", # Here to sepcify your Isaac SDK location, <username> is your username
- )
-```
-
-3. build application under stereo_ae400 folder.
-```
- $ cd ~/stereo_ae400
- $ bazel build //apps/ae400_camera
-```
- note: make sure your host can access to Internet, or you will get build errors
-
-4. IP address configuration
-
-#### Camera side:
+1. IP address setting - Camera side:
 
  The default setting of AE400 camera is _192.168.0.100_, however, you can assign new IP address to it via browser.
 
@@ -104,7 +118,7 @@ With latest version, you can select left and right IR channels to view in Isaac 
 
  note: Check your product manual to find login account and password, or contact [LIPS](https://www.lips-hci.com/contact) to get support
 
-#### Host side:
+2. IP address setting - Host side:
 
  Configure the IP address for connecting AE400 by editing the network setting file
 ```
@@ -117,31 +131,33 @@ With latest version, you can select left and right IR channels to view in Isaac 
  }
 ```
 
- Then install the setting to your system
+3. Install network setting into your system
 ```
  $ sudo mkdir -p /usr/etc/LIPS/lib
  $ sudo cp config/network.json /usr/etc/LIPS/lib/
 ```
 
- note: AE400 software looks for setting in system path ``/usr/etc/LIPS/lib/network.json``. If file is missing, default IP address _192.168.0.100_ is applied.
+note: AE400 software looks for setting in system path ``/usr/etc/LIPS/lib/network.json``. If file is missing, default IP address _192.168.0.100_ is applied.
 
-5. run camera sample application by command-line.
+
+## Run camera sample application
+
+1. Launch app by bazel commandline
 ```
  $ bazel run //apps/ae400_camera
 ```
 
  note: make sure the host, AE400 camera, and the remote robot are at same network domain, so they can connect to each other.
 
-6. Open a web brower, connect to http://localhost:3000
+2. Open a web brower, connect to http://localhost:3000
 
  From left panel, select ae400_camera checkbox to enable depth/color channels for streaming.
 
  Here is a screenshot of Isaac Sight webpage.
  ![screenshot of Isaac Sight](screenshot_IsaacSight_ae400_demo.jpg)
 
-7. Enjoy!
 
-## Deploy the sample application to remote robot (optional)
+### Deploy the sample application to remote robot (optional)
 You can run the application on remote robot like Jetson Nano or TX2
 
 #### Deploy the sample application to remote robot
