@@ -35,7 +35,7 @@ cc_library(
             "@com_nvidia_isaac_engine//engine/build:platform_x86_64": [
                 "third-party/lips/lib/v1.0.0.2/linux/amd64/libbackend-ethernet.a",
             ],
-            "@com_nvidia_isaac_engine//engine/build:platform_jetpack44": [
+            "@com_nvidia_isaac_engine//engine/build:platform_jetpack45": [
                 "third-party/lips/lib/v1.0.0.2/linux/arm64/libbackend-ethernet.a",
             ],
         }),
