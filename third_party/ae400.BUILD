@@ -60,6 +60,8 @@ cc_library(
         "ELPP_NO_DEFAULT_LOG_FILE",
         "ELPP_THREAD_SAFE",
         "RS2_USE_V4L2_BACKEND",
+        "DISABLE_UVC_METADATA",
+        "ENABLE_AE400_IMU",
         "HWM_OVER_XU",
         "RASPBERRY_PI",
     ],
@@ -184,7 +186,11 @@ cc_library(
 
 cc_library(
     name = "json",
-    hdrs = ["third-party/json.hpp"],
+    hdrs = glob([
+        "third-party/json.hpp",
+        "third-party/rapidjson/*.h",
+        "third-party/rapidjson/**/*.h",
+    ]),
 )
 
 cc_library(
