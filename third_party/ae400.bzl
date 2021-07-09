@@ -45,7 +45,7 @@ def ae400_workspace():
     isaac_new_git_repository(
         name = "ae400_realsense_sdk",
         remote = "https://github.com/lips-hci/ae400-realsense-sdk.git",
-        tag = "AE400_v1.0.0.2_rs2.36.0",
+        tag = "AE400_v1.0.0.3_rs2.36.0",
         build_file = clean_dep("//third_party:ae400.BUILD"),
         licenses = ["@ae400_realsense_sdk//:LICENSE"],
     )
