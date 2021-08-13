@@ -10,16 +10,18 @@
   "config": {
     "camera": {
       "ae400": {
-        "rows": 360,
+        "rows": 480,
         "cols": 640,
-        "depth_framerate": 15,
-        "ir_framerate": 15,
+        "depth_framerate": 30,
+        "ir_framerate": 30,
         "rgb_framerate": 30,
         "enable_depth": true,
         "enable_ir_stereo": true,
         "enable_rgb": true,
         "enable_depth_laser": false,
-        "align_to_color": false,
+        "align_to_color": true,
+        "rates_printer": false,
+        "post_processing": false,
         "enable_imu": true,
         "frame_queue_size": 2,
         "auto_exposure_priority": false
@@ -69,7 +71,7 @@
               "renderer": "2d",
               "dims": {
                 "width": 640,
-                "height": 360
+                "height": 480
               },
               "channels": [
                 {
@@ -81,7 +83,7 @@
               "renderer": "2d",
               "dims": {
                 "width": 640,
-                "height": 360
+                "height": 480
               },
               "channels": [
                 {
@@ -93,7 +95,7 @@
               "renderer": "2d",
               "dims": {
                 "width": 640,
-                "height": 360
+                "height": 480
               },
               "channels": [
                 {
@@ -105,7 +107,7 @@
               "renderer": "2d",
               "dims": {
                 "width": 640,
-                "height": 360
+                "height": 480
               },
               "channels": [
                 {

@@ -13,7 +13,7 @@
           "cols": 640,
           "rgb_framerate": 15,
           "depth_framerate": 15,
-          "align_to_color": false,
+          "align_to_color": true,
           "frame_queue_size": 2,
           "auto_exposure_priority": false,
           "dev_index": 0

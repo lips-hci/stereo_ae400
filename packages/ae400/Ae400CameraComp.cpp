@@ -146,7 +146,12 @@ struct AE400Camera::Impl {
   int active_streams = kNone;                          // streams enabled in the pipeline
   TimeStampInfo timestamp_info;                        // timestamp info for color and depth frames
   TimeStampInfo ir_timestamp;                          // timestamp info for IR frames
-  bool auto_exposure_enabled;  // control auto exposure
+  bool auto_exposure_enabled;   // control auto exposure
+  rs2::rates_printer printer;   // Declare rates printer for showing streaming rates
+  rs2::disparity_transform depth_to_disparity = rs2::disparity_transform(true);
+  rs2::spatial_filter spat_filter;    // Spatial  - edge-preserving spatial smoothing
+  rs2::temporal_filter temp_filter;   // Temporal - reduces temporal noise
+  rs2::disparity_transform disparity_to_depth = rs2::disparity_transform(false);
 };
 
 // The function returns the rs2::video_frame timestamp in nanoseconds adjusted to the difference
@@ -274,6 +279,10 @@ void AE400Camera::tick() {
     // All published RealSense frames are rectified so distortion parameters are all 0
     rs2::frameset frames = impl_->pipe.wait_for_frames();
 
+    if (get_rates_printer()) {
+      frames.apply_filter(impl_->printer);
+    }
+
     if (get_align_to_color()) {
       // spatially align the images
       frames = frames.apply_filter(impl_->align_to);
@@ -325,9 +334,26 @@ void AE400Camera::tick() {
 
     // Obtain and publish the depth image
     if (depth_on) {
-      const rs2::depth_frame depth_frame = frames.get_depth_frame();
+      rs2::depth_frame depth_frame = frames.get_depth_frame();
       if (acqtime == 0) {
         acqtime = getAdjustedTimeStamp(depth_frame.get_timestamp(), impl_->timestamp_info);
+      }
+
+      if (get_post_processing()) {
+        /* Apply filters.
+        The implemented flow of the filters pipeline is in the following order:
+        1. transform the scene into disparity domain
+        2. apply spatial filter
+        3. apply temporal filter
+        4. revert the results back (if step Disparity filter was applied
+        to depth domain (each post processing block is optional and can be applied independantly).
+        */
+        rs2::frame filtered = depth_frame; // Does not copy the frame, only adds a reference
+        filtered = impl_->depth_to_disparity.process(filtered);
+        filtered = impl_->spat_filter.process(filtered);
+        filtered = impl_->temp_filter.process(filtered);
+        filtered = impl_->disparity_to_depth.process(filtered);
+        depth_frame.swap(filtered);
       }
 
       CpuBufferConstView depth_buffer(reinterpret_cast<const byte*>(depth_frame.get_data()),
@@ -349,7 +375,7 @@ void AE400Camera::tick() {
     }
 
     if(get_enable_imu()) {
-      lips_ae400_imu imu_data;
+      lips_ae400_imu imu_data = {0};
       if ( get_imu_data(0, &imu_data) == 0)
       {
         auto imu_datamsg = tx_imu_raw().initProto();

@@ -96,6 +96,10 @@ class AE400Camera : public alice::Codelet {
   // If enabled, the depth image is spatially aligned to the color image to provide matching color
   // and depth values for every pixel. This is a CPU-intensive process and can reduce frame rates.
   ISAAC_PARAM(bool, align_to_color, true);
+  // If enabled, print streaming frame-rate information for debugging
+  ISAAC_PARAM(bool, rates_printer, false);
+  // If enabled, run post processing (spatial and temporal filters) on depth frame
+  ISAAC_PARAM(bool, post_processing, false);
   // Max number of frames you can hold at a given time. Increasing this number reduces frame
   // drops but increase latency, and vice versa; ranges from 0 to 32.
   ISAAC_PARAM(int, frame_queue_size, 2);
@@ -122,10 +126,9 @@ class AE400Camera : public alice::Codelet {
   // on the order the Realsense library detects the cameras, and may vary based on mounting order.
   // By default the first camera device in the list is chosen. This camera choice can be overridden
   // by the serial number parameter below.
-  ISAAC_PARAM(bool, enable_imu, true);
+  ISAAC_PARAM(bool, enable_imu, false);
   // Enable acquisition and publication of IMU device reading.
   // Frequency is set to 30 currently to align Depth frame FPS.
-  // This setting can't be changed at runtime.
   ISAAC_PARAM(int, dev_index, 0)
   // An alternative way to specify the desired device in a multicamera setup. The serial number of
   // the Realsense camera can be found printed on the device. If specified, this parameter will take
