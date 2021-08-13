@@ -122,10 +122,9 @@ class AE400Camera : public alice::Codelet {
   // on the order the Realsense library detects the cameras, and may vary based on mounting order.
   // By default the first camera device in the list is chosen. This camera choice can be overridden
   // by the serial number parameter below.
-  ISAAC_PARAM(bool, enable_imu, true);
+  ISAAC_PARAM(bool, enable_imu, false);
   // Enable acquisition and publication of IMU device reading.
   // Frequency is set to 30 currently to align Depth frame FPS.
-  // This setting can't be changed at runtime.
   ISAAC_PARAM(int, dev_index, 0)
   // An alternative way to specify the desired device in a multicamera setup. The serial number of
   // the Realsense camera can be found printed on the device. If specified, this parameter will take

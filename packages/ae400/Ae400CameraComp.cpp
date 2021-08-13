@@ -349,7 +349,7 @@ void AE400Camera::tick() {
     }
 
     if(get_enable_imu()) {
-      lips_ae400_imu imu_data;
+      lips_ae400_imu imu_data = {0};
       if ( get_imu_data(0, &imu_data) == 0)
       {
         auto imu_datamsg = tx_imu_raw().initProto();
