@@ -146,7 +146,8 @@ struct AE400Camera::Impl {
   int active_streams = kNone;                          // streams enabled in the pipeline
   TimeStampInfo timestamp_info;                        // timestamp info for color and depth frames
   TimeStampInfo ir_timestamp;                          // timestamp info for IR frames
-  bool auto_exposure_enabled;  // control auto exposure
+  bool auto_exposure_enabled;   // control auto exposure
+  rs2::rates_printer printer;   // Declare rates printer for showing streaming rates
 };
 
 // The function returns the rs2::video_frame timestamp in nanoseconds adjusted to the difference
@@ -273,6 +274,10 @@ void AE400Camera::tick() {
     // wait for new frames
     // All published RealSense frames are rectified so distortion parameters are all 0
     rs2::frameset frames = impl_->pipe.wait_for_frames();
+
+    if (get_rates_printer()) {
+      frames.apply_filter(impl_->printer);
+    }
 
     if (get_align_to_color()) {
       // spatially align the images

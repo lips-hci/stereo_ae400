@@ -96,6 +96,8 @@ class AE400Camera : public alice::Codelet {
   // If enabled, the depth image is spatially aligned to the color image to provide matching color
   // and depth values for every pixel. This is a CPU-intensive process and can reduce frame rates.
   ISAAC_PARAM(bool, align_to_color, true);
+  // If enabled, print streaming frame-rate information for debugging
+  ISAAC_PARAM(bool, rates_printer, false);
   // Max number of frames you can hold at a given time. Increasing this number reduces frame
   // drops but increase latency, and vice versa; ranges from 0 to 32.
   ISAAC_PARAM(int, frame_queue_size, 2);
