@@ -98,6 +98,8 @@ class AE400Camera : public alice::Codelet {
   ISAAC_PARAM(bool, align_to_color, true);
   // If enabled, print streaming frame-rate information for debugging
   ISAAC_PARAM(bool, rates_printer, false);
+  // If enabled, run post processing (spatial and temporal filters) on depth frame
+  ISAAC_PARAM(bool, post_processing, false);
   // Max number of frames you can hold at a given time. Increasing this number reduces frame
   // drops but increase latency, and vice versa; ranges from 0 to 32.
   ISAAC_PARAM(int, frame_queue_size, 2);

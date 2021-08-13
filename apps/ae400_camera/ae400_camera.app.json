@@ -21,6 +21,7 @@
         "enable_depth_laser": false,
         "align_to_color": true,
         "rates_printer": false,
+        "post_processing": false,
         "enable_imu": true,
         "frame_queue_size": 2,
         "auto_exposure_priority": false
