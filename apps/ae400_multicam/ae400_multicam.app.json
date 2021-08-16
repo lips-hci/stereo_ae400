@@ -11,8 +11,10 @@
         "ae400": {
           "rows": 360,
           "cols": 640,
-          "rgb_framerate": 15,
+          "color_framerate": 15,
           "depth_framerate": 15,
+          "enable_depth": true,
+          "enable_color": true,
           "align_to_color": true,
           "frame_queue_size": 2,
           "auto_exposure_priority": false,
@@ -43,8 +45,10 @@
         "ae400": {
           "rows": 360,
           "cols": 640,
-          "rgb_framerate": 15,
+          "color_framerate": 15,
           "depth_framerate": 15,
+          "enable_depth": true,
+          "enable_color": true,
           "align_to_color": true,
           "frame_queue_size": 2,
           "auto_exposure_priority": false,
