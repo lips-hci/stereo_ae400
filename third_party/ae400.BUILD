@@ -23,9 +23,10 @@ exports_files([
     "COPYING",
 ])
 
-# Use backend-ethernet v0.9 for RS release 2.17.1 ~ 2.20
-# TODO: next SDK release we will update this lib to v1.0
-#   since RS SDK release is 2.21 ~ 2.3x
+# backend-ethernet
+# RS codebase now is v2.38.1
+# v1.0.0.5 for RS codebase v2.38~v2.42
+# v1.0.1.5 for RS codebase v2.43~present
 cc_library(
     name = "libbackend_ethernet",
     srcs = glob(
@@ -33,10 +34,10 @@ cc_library(
             "third-party/easyloggingpp/src/easylogging++.cc",
         ]) + select({
             "@com_nvidia_isaac_engine//engine/build:platform_x86_64": [
-                "third-party/lips/lib/v1.0.0.3/linux/amd64/libbackend-ethernet.a",
+                "third-party/lips/lib/v1.0.0.5/linux/amd64/libbackend-ethernet.a",
             ],
             "@com_nvidia_isaac_engine//engine/build:platform_jetpack45": [
-                "third-party/lips/lib/v1.0.0.3/linux/arm64/libbackend-ethernet.a",
+                "third-party/lips/lib/v1.0.0.5/linux/arm64/libbackend-ethernet.a",
             ],
         }),
     hdrs = glob([
