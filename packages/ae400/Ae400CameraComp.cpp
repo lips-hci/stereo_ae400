@@ -8,7 +8,7 @@ distribution of this software and related documentation without an express
 license agreement from NVIDIA CORPORATION is strictly prohibited.
 */
 /*
-Copyright (c) 2020, LIPS CORPORATION. All rights reserved.
+Copyright (c) 2022, LIPS CORPORATION. All rights reserved.
 
 Modify this driver to support LIPS AE400 Stereo Camera
 */
@@ -134,7 +134,15 @@ enum StreamType {
   kNone = 0,
   kColor = 1,
   kIr = 2,
-  kDepth = 4
+  kDepth = 4,
+  kImu = 8
+};
+
+// LIPS Camera Model
+enum CameraModel {
+  Model_Unknown = 0,
+  Model_AE400 = 1,
+  Model_AE450 = 2
 };
 
 // Stores various Realsense options
@@ -144,8 +152,10 @@ struct AE400Camera::Impl {
   rs2::align align_to = rs2::align(RS2_STREAM_COLOR);  // align color and depth?
   rs2::device dev;                                     // Realsense device
   int active_streams = kNone;                          // streams enabled in the pipeline
+  CameraModel model = Model_Unknown;                   // camera model connected
   TimeStampInfo timestamp_info;                        // timestamp info for color and depth frames
   TimeStampInfo ir_timestamp;                          // timestamp info for IR frames
+  TimeStampInfo imu_timestamp;                         // timestamp info for IMU Data
   bool auto_exposure_enabled;   // control auto exposure
   rs2::rates_printer printer;   // Declare rates printer for showing streaming rates
   rs2::disparity_transform depth_to_disparity = rs2::disparity_transform(true);
@@ -212,6 +222,17 @@ void AE400Camera::start() {
       set_serial_number(serial_number);
     }
 
+    // Check the device model
+    std::string device_name = impl_->dev.get_info(RS2_CAMERA_INFO_NAME);
+    if (device_name.find("D415") != std::string::npos) {
+      impl_->model = Model_AE400;
+    } else if (device_name.find("D455") != std::string::npos) {
+      impl_->model = Model_AE450;
+    } else {
+      LOG_WARNING("The model of the connected device is unknown.");
+    }
+    //LOG_INFO("Device Connected: (%d)%s - %s", impl_->model, device_name.c_str(), serial_number.c_str());
+
     // Check the firmware, and configure
     LogWarningIfNotRecommendedFirmwareVersion(impl_->dev);
     initializeDeviceConfig(impl_->dev);
@@ -238,6 +259,13 @@ void AE400Camera::start() {
       impl_->active_streams |= StreamType::kColor;
       cfg.enable_stream(RS2_STREAM_COLOR, get_cols(), get_rows(), RS2_FORMAT_RGB8,
                         get_color_framerate());
+    }
+    if (get_enable_imu()) {
+      impl_->active_streams |= StreamType::kImu;
+      if (impl_->model == Model_AE450) {
+        cfg.enable_stream(RS2_STREAM_ACCEL, RS2_FORMAT_MOTION_XYZ32F);
+        cfg.enable_stream(RS2_STREAM_GYRO, RS2_FORMAT_MOTION_XYZ32F);
+      }
     }
 
     // start the pipeline
@@ -297,6 +325,7 @@ void AE400Camera::tick() {
     const bool color_on = impl_->active_streams & StreamType::kColor;
     const bool ir_on = impl_->active_streams & StreamType::kIr;
     const bool depth_on = impl_->active_streams & StreamType::kDepth;
+    const bool imu_on = impl_->active_streams & StreamType::kImu;
 
     // color image
     if (color_on) {
@@ -374,24 +403,43 @@ void AE400Camera::tick() {
       tx_color_intrinsics().publish(acqtime);
     }
 
-    if(get_enable_imu()) {
-      lips_ae400_imu imu_data = {0};
-      if ( get_imu_data(0, &imu_data) == 0)
-      {
-        auto imu_datamsg = tx_imu_raw().initProto();
-        double imu_acqtime = imu_data.timestamp * 0.001; //ms converts to sec
+    if (imu_on) {
+      auto imu_datamsg = tx_imu_raw().initProto();
+
+      if (impl_->model == Model_AE450) {
+        const rs2::motion_frame accel_frame = frames.first_or_default(RS2_STREAM_ACCEL);
+        const rs2_vector accel_data = accel_frame.get_motion_data();
+        const rs2::motion_frame gyro_frame = frames.first_or_default(RS2_STREAM_GYRO);
+        const rs2_vector gyro_data = gyro_frame.get_motion_data();
 
         // set accelerometer data
-        imu_datamsg.setLinearAccelerationX(imu_data.accel_x);
-        imu_datamsg.setLinearAccelerationY(imu_data.accel_y);
-        imu_datamsg.setLinearAccelerationZ(imu_data.accel_z);
+        imu_datamsg.setLinearAccelerationX(accel_data.x);
+        imu_datamsg.setLinearAccelerationY(accel_data.y);
+        imu_datamsg.setLinearAccelerationZ(accel_data.z);
 
         // set gyroscope data
-        imu_datamsg.setAngularVelocityX(imu_data.gyro_x);
-        imu_datamsg.setAngularVelocityY(imu_data.gyro_y);
-        imu_datamsg.setAngularVelocityZ(imu_data.gyro_z);
+        imu_datamsg.setAngularVelocityX(gyro_data.x);
+        imu_datamsg.setAngularVelocityY(gyro_data.y);
+        imu_datamsg.setAngularVelocityZ(gyro_data.z);
 
+        double imu_acqtime = getAdjustedTimeStamp(accel_frame.get_timestamp(), impl_->imu_timestamp);
         tx_imu_raw().publish(imu_acqtime);
+      } else {
+        lips_ae400_imu imu_data = {0};
+        if ( get_imu_data(0, &imu_data) == 0) {
+          // set accelerometer data
+          imu_datamsg.setLinearAccelerationX(imu_data.accel_x);
+          imu_datamsg.setLinearAccelerationY(imu_data.accel_y);
+          imu_datamsg.setLinearAccelerationZ(imu_data.accel_z);
+
+          // set gyroscope data
+          imu_datamsg.setAngularVelocityX(imu_data.gyro_x);
+          imu_datamsg.setAngularVelocityY(imu_data.gyro_y);
+          imu_datamsg.setAngularVelocityZ(imu_data.gyro_z);
+
+          double imu_acqtime = imu_data.timestamp * 0.001; //ms converts to sec
+          tx_imu_raw().publish(imu_acqtime);
+        }
       }
     }
   } catch (const rs2::error& e) {
