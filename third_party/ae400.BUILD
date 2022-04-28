@@ -24,9 +24,9 @@ exports_files([
 ])
 
 # backend-ethernet
-# RS codebase now is v2.38.1
-# v1.0.0.5 for RS codebase v2.38~v2.42
-# v1.0.1.5 for RS codebase v2.43~present
+# RS codebase now is v2.43.0
+# v1.0.2.0 for RS codebase v2.43~v2.48
+# v1.0.2.5 for RS codebase v2.49~v2.50
 cc_library(
     name = "libbackend_ethernet",
     srcs = glob(
@@ -34,10 +34,10 @@ cc_library(
             "third-party/easyloggingpp/src/easylogging++.cc",
         ]) + select({
             "@com_nvidia_isaac_engine//engine/build:platform_x86_64": [
-                "third-party/lips/lib/v1.0.0.5/linux/amd64/libbackend-ethernet.a",
+                "third-party/lips/lib/v1.0.2.0/linux/amd64/libbackend-ethernet.a",
             ],
             "@com_nvidia_isaac_engine//engine/build:platform_jetpack45": [
-                "third-party/lips/lib/v1.0.0.5/linux/arm64/libbackend-ethernet.a",
+                "third-party/lips/lib/v1.0.2.0/linux/arm64/libbackend-ethernet.a",
             ],
         }),
     hdrs = glob([
@@ -80,7 +80,11 @@ cc_library(
 cc_library(
     name = "ae400_realsense_sdk",
     srcs = glob(
-        ["src/**/*.cpp"],
+        [
+            "src/**/*.cpp",
+            "common/utilities/time/l500/get-mfr-ww.cpp",
+            "common/utilities/time/work_week.cpp",
+        ],
         exclude = [
             "src/android/*",
             "src/android/jni/*",
@@ -102,6 +106,8 @@ cc_library(
     ) + [
         "common/fw/firmware-version.h",
         "common/parser.hpp",
+        "common/utilities/time/l500/get-mfr-ww.h",
+        "common/utilities/time/work_week.h",
         "third-party/stb_image.h",
         "common/decompress-huffman.h",
     ],
@@ -109,6 +115,7 @@ cc_library(
         "include/librealsense2/**/*.h*",
         "src/**/*.h",
         "src/**/*.hpp",
+        "common/utilities/time/*.h",
     ]),
     alwayslink=True,
     copts = [
